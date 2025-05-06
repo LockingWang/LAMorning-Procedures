@@ -1,0 +1,12 @@
+SELECT TOP (1000) [GID]
+      ,[ID]
+      ,[EnterpriseID]
+      ,[ShopID]
+      ,[TableName]
+      ,[SourceID]
+      ,[SourceColumn]
+      ,[Content]
+      ,[LastModify]
+      ,[LastOP]
+  FROM [NCW_xurf].[dbo].[P_Data_Language_D]
+  WHERE EnterpriseID = 'xurf'

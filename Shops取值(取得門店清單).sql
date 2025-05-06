@@ -1,0 +1,1 @@
+select * from Shops where EnterPriseID = 'xurf'

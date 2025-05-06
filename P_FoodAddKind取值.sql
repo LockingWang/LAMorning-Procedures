@@ -1,0 +1,12 @@
+SELECT TOP (1000) [GID]
+      ,[EnterpriseID]
+      ,[ID]
+      ,[Name]
+      ,[ShopID]
+      ,[LastOP]
+      ,[LastModify]
+      ,[MaxCount]
+      ,[needed]
+      ,[SN]
+  FROM [NCW_xurf].[dbo].[P_FoodAddKind]
+  WHERE EnterpriseID = 'xurf'

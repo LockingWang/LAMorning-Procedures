@@ -1,0 +1,1 @@
+SELECT * FROM SC_Dictionary WHERE "Table"='P_FoodTaste'
