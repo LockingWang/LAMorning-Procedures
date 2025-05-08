@@ -1,1 +1,1 @@
-SELECT * FROM SC_Dictionary WHERE "Table"='P_FoodTaste'
+SELECT * FROM SC_Dictionary WHERE "Table"='XS_getGiftAll'

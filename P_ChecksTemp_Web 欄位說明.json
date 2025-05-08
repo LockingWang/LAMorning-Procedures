@@ -1,0 +1,62 @@
+[
+  {
+    "Field": "BatchID",
+    "TWCaption": "BatchID"
+  },
+  {
+    "Field": "CheckID",
+    "TWCaption": "CheckID"
+  },
+  {
+    "Field": "CheckName",
+    "TWCaption": "CheckName"
+  },
+  {
+    "Field": "CheckNO",
+    "TWCaption": "CheckNO"
+  },
+  {
+    "Field": "DeskID",
+    "TWCaption": "DeskID"
+  },
+  {
+    "Field": "EDC",
+    "TWCaption": "EDC"
+  },
+  {
+    "Field": "EnterpriseID",
+    "TWCaption": "EnterpriseID"
+  },
+  {
+    "Field": "GID",
+    "TWCaption": "GID"
+  },
+  {
+    "Field": "ItemsData",
+    "TWCaption": "ItemsData"
+  },
+  {
+    "Field": "LastModify",
+    "TWCaption": "LastModify"
+  },
+  {
+    "Field": "OrderID",
+    "TWCaption": "OrderID"
+  },
+  {
+    "Field": "PCommand",
+    "TWCaption": "PCommand"
+  },
+  {
+    "Field": "Remark",
+    "TWCaption": "Remark"
+  },
+  {
+    "Field": "SHOPID",
+    "TWCaption": "SHOPID"
+  },
+  {
+    "Field": "Total",
+    "TWCaption": "Total"
+  }
+]

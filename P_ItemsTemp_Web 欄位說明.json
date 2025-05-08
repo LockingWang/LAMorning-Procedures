@@ -1,0 +1,438 @@
+[
+  {
+    "Field": "Add",
+    "TWCaption": "加料"
+  },
+  {
+    "Field": "AddCost",
+    "TWCaption": "加料金額"
+  },
+  {
+    "Field": "addParent",
+    "TWCaption": null
+  },
+  {
+    "Field": "AddTotal",
+    "TWCaption": "加料金額"
+  },
+  {
+    "Field": "AgioCost",
+    "TWCaption": "單品折扣讓"
+  },
+  {
+    "Field": "AgioDiscount",
+    "TWCaption": "折扣讓"
+  },
+  {
+    "Field": "AgioPercent",
+    "TWCaption": "折扣率"
+  },
+  {
+    "Field": "AgioReason",
+    "TWCaption": "折扣讓原因"
+  },
+  {
+    "Field": "AgioTotal",
+    "TWCaption": "單品折扣金額"
+  },
+  {
+    "Field": "Auto",
+    "TWCaption": "自動附餐"
+  },
+  {
+    "Field": "BegNo",
+    "TWCaption": "券起號"
+  },
+  {
+    "Field": "ChangePrice",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseMachine",
+    "TWCaption": "關單機台"
+  },
+  {
+    "Field": "CloseShift",
+    "TWCaption": "關單班別"
+  },
+  {
+    "Field": "CloseTime",
+    "TWCaption": "關單時間"
+  },
+  {
+    "Field": "CloseWorkDate",
+    "TWCaption": "關單工作日"
+  },
+  {
+    "Field": "CloseWorkTime",
+    "TWCaption": "關單工作日時間"
+  },
+  {
+    "Field": "Cook",
+    "TWCaption": null
+  },
+  {
+    "Field": "Count",
+    "TWCaption": "數量"
+  },
+  {
+    "Field": "Counteract",
+    "TWCaption": null
+  },
+  {
+    "Field": "CurPrice",
+    "TWCaption": null
+  },
+  {
+    "Field": "DeskID",
+    "TWCaption": "桌位ID"
+  },
+  {
+    "Field": "Discount",
+    "TWCaption": "是否允許單品折扣"
+  },
+  {
+    "Field": "EndNo",
+    "TWCaption": "券迄號"
+  },
+  {
+    "Field": "EndTime",
+    "TWCaption": "結束時間"
+  },
+  {
+    "Field": "EnterpriseID",
+    "TWCaption": null
+  },
+  {
+    "Field": "EntNo",
+    "TWCaption": "附餐順序"
+  },
+  {
+    "Field": "Exchange",
+    "TWCaption": null
+  },
+  {
+    "Field": "ExchangeInteger",
+    "TWCaption": null
+  },
+  {
+    "Field": "FavorableTotal",
+    "TWCaption": "優惠金額"
+  },
+  {
+    "Field": "Finished",
+    "TWCaption": "是否出餐"
+  },
+  {
+    "Field": "FinishTime",
+    "TWCaption": "出餐時間"
+  },
+  {
+    "Field": "FINISHUSER",
+    "TWCaption": "出餐人"
+  },
+  {
+    "Field": "FoodID",
+    "TWCaption": "商品編號"
+  },
+  {
+    "Field": "FoodName",
+    "TWCaption": "商品名稱"
+  },
+  {
+    "Field": "FoodType2",
+    "TWCaption": null
+  },
+  {
+    "Field": "FreeCount",
+    "TWCaption": null
+  },
+  {
+    "Field": "GrossSaleTotal",
+    "TWCaption": "銷售金額"
+  },
+  {
+    "Field": "ID",
+    "TWCaption": "自動編號"
+  },
+  {
+    "Field": "InputForm",
+    "TWCaption": "輸入介面"
+  },
+  {
+    "Field": "InputTime",
+    "TWCaption": "商品點選時間"
+  },
+  {
+    "Field": "InvoiceNo",
+    "TWCaption": "發票號碼"
+  },
+  {
+    "Field": "IsPromote",
+    "TWCaption": null
+  },
+  {
+    "Field": "ItemState",
+    "TWCaption": null
+  },
+  {
+    "Field": "JDCount",
+    "TWCaption": null
+  },
+  {
+    "Field": "KindID",
+    "TWCaption": "類別編號"
+  },
+  {
+    "Field": "KindName",
+    "TWCaption": "類別名稱"
+  },
+  {
+    "Field": "LastModify",
+    "TWCaption": "最後修改時間"
+  },
+  {
+    "Field": "LastOP",
+    "TWCaption": "最後操作人員"
+  },
+  {
+    "Field": "Lease",
+    "TWCaption": null
+  },
+  {
+    "Field": "MainID",
+    "TWCaption": "所屬商品編號"
+  },
+  {
+    "Field": "ManCount",
+    "TWCaption": "人數商品"
+  },
+  {
+    "Field": "ManValue",
+    "TWCaption": null
+  },
+  {
+    "Field": "Memo",
+    "TWCaption": "備註"
+  },
+  {
+    "Field": "NeedRole",
+    "TWCaption": null
+  },
+  {
+    "Field": "NetSaleTotal",
+    "TWCaption": "銷售淨額"
+  },
+  {
+    "Field": "No",
+    "TWCaption": null
+  },
+  {
+    "Field": "Operator",
+    "TWCaption": "點餐人名稱"
+  },
+  {
+    "Field": "OpSeg",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderAgio",
+    "TWCaption": "總合折扣讓金額"
+  },
+  {
+    "Field": "OrderFlag",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderID",
+    "TWCaption": "交易單據ID"
+  },
+  {
+    "Field": "OrderNo",
+    "TWCaption": "交易單號"
+  },
+  {
+    "Field": "Original",
+    "TWCaption": "商品原價"
+  },
+  {
+    "Field": "Parent",
+    "TWCaption": "附餐所屬主餐商品ID"
+  },
+  {
+    "Field": "PlayTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "PlayType",
+    "TWCaption": null
+  },
+  {
+    "Field": "Price",
+    "TWCaption": "單價"
+  },
+  {
+    "Field": "PriceExpr",
+    "TWCaption": "價格型態計算方式"
+  },
+  {
+    "Field": "PriceReason",
+    "TWCaption": "價格型態名稱"
+  },
+  {
+    "Field": "Printed",
+    "TWCaption": "是否印表"
+  },
+  {
+    "Field": "PrintTime",
+    "TWCaption": "印表時間"
+  },
+  {
+    "Field": "PRINTUSER",
+    "TWCaption": "送單操作人"
+  },
+  {
+    "Field": "PromoteAgioTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteCount",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteID",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldAgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldAgioPercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldPrice",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "Return",
+    "TWCaption": "是否被退貨提回"
+  },
+  {
+    "Field": "SaleTime",
+    "TWCaption": "銷售時間"
+  },
+  {
+    "Field": "SaleTotal",
+    "TWCaption": "原銷售金額"
+  },
+  {
+    "Field": "SaleType",
+    "TWCaption": "選單類型"
+  },
+  {
+    "Field": "Seat",
+    "TWCaption": "座位"
+  },
+  {
+    "Field": "ServCost",
+    "TWCaption": "是否收取服務費"
+  },
+  {
+    "Field": "ServiceTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "SHOPID",
+    "TWCaption": "店號"
+  },
+  {
+    "Field": "Special",
+    "TWCaption": "特殊餐點"
+  },
+  {
+    "Field": "Special1",
+    "TWCaption": null
+  },
+  {
+    "Field": "StartTime",
+    "TWCaption": "開始時間"
+  },
+  {
+    "Field": "StockClearTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "SubTotal",
+    "TWCaption": "帳條統計"
+  },
+  {
+    "Field": "SuitePrice",
+    "TWCaption": null
+  },
+  {
+    "Field": "Taste",
+    "TWCaption": "口味"
+  },
+  {
+    "Field": "Tend",
+    "TWCaption": "是否招待"
+  },
+  {
+    "Field": "TendReason",
+    "TWCaption": "招待原因"
+  },
+  {
+    "Field": "TendTotal",
+    "TWCaption": "招待金額"
+  },
+  {
+    "Field": "TENDUSER",
+    "TWCaption": "招待人"
+  },
+  {
+    "Field": "TicketInfoID",
+    "TWCaption": null
+  },
+  {
+    "Field": "tmpSelected",
+    "TWCaption": "複選時暫用欄位"
+  },
+  {
+    "Field": "Total",
+    "TWCaption": "金額"
+  },
+  {
+    "Field": "TotalDiscount",
+    "TWCaption": "是否允許總合折扣讓"
+  },
+  {
+    "Field": "TradePoints",
+    "TWCaption": null
+  },
+  {
+    "Field": "VipFlag",
+    "TWCaption": null
+  },
+  {
+    "Field": "VipFoodFlag",
+    "TWCaption": null
+  },
+  {
+    "Field": "Weight",
+    "TWCaption": "重量"
+  }
+]

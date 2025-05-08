@@ -1,0 +1,610 @@
+[
+  {
+    "Field": "activityFirmPart",
+    "TWCaption": "活動優惠平台承擔金額"
+  },
+  {
+    "Field": "activityShopPart",
+    "TWCaption": "活動優惠店家承擔金額"
+  },
+  {
+    "Field": "activityTotal",
+    "TWCaption": "活動優惠全部金額"
+  },
+  {
+    "Field": "AgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "AgioDiscount",
+    "TWCaption": null
+  },
+  {
+    "Field": "AgioPercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "AgioTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "AppFunGID",
+    "TWCaption": null
+  },
+  {
+    "Field": "AppOrderCloseTime",
+    "TWCaption": "外送送達時間"
+  },
+  {
+    "Field": "AppOrderCloseTimeOP",
+    "TWCaption": "外送送達人"
+  },
+  {
+    "Field": "ArrivedShopOP",
+    "TWCaption": "操作已出貨/已到店人"
+  },
+  {
+    "Field": "ArrivedShopTime",
+    "TWCaption": "操作已出貨/已到店時間"
+  },
+  {
+    "Field": "Baby",
+    "TWCaption": ""
+  },
+  {
+    "Field": "BakField_1",
+    "TWCaption": null
+  },
+  {
+    "Field": "BakField_2",
+    "TWCaption": null
+  },
+  {
+    "Field": "BakField_3",
+    "TWCaption": null
+  },
+  {
+    "Field": "Balance",
+    "TWCaption": null
+  },
+  {
+    "Field": "BillType",
+    "TWCaption": "訂單類型"
+  },
+  {
+    "Field": "CardID",
+    "TWCaption": null
+  },
+  {
+    "Field": "CarrierId",
+    "TWCaption": "發票載具"
+  },
+  {
+    "Field": "ChangeTotal",
+    "TWCaption": "找零金額"
+  },
+  {
+    "Field": "CheckAgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "CheckAgioPercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "Checkout",
+    "TWCaption": "付款狀態"
+  },
+  {
+    "Field": "CheckPrivateAgioTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "CheckTotal",
+    "TWCaption": "已收金額"
+  },
+  {
+    "Field": "Child",
+    "TWCaption": "客數(小孩)"
+  },
+  {
+    "Field": "CloseMachine",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseOperator",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseShift",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseWorkDate",
+    "TWCaption": null
+  },
+  {
+    "Field": "CloseWorkTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "Count",
+    "TWCaption": null
+  },
+  {
+    "Field": "CustType",
+    "TWCaption": null
+  },
+  {
+    "Field": "DAgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "DAgioTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "DayType",
+    "TWCaption": null
+  },
+  {
+    "Field": "deliverFee",
+    "TWCaption": "外送金額"
+  },
+  {
+    "Field": "DeliverOP",
+    "TWCaption": "去送餐人"
+  },
+  {
+    "Field": "DeliverTime",
+    "TWCaption": "去送餐時間"
+  },
+  {
+    "Field": "DeskID",
+    "TWCaption": "桌號"
+  },
+  {
+    "Field": "EnterpriseID",
+    "TWCaption": null
+  },
+  {
+    "Field": "FavorableTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "Fee",
+    "TWCaption": null
+  },
+  {
+    "Field": "FinishTime",
+    "TWCaption": "取餐時間"
+  },
+  {
+    "Field": "firmServiceFee",
+    "TWCaption": "平台傭金"
+  },
+  {
+    "Field": "FoodTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "GrossSaleTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "ID",
+    "TWCaption": "訂單編號內碼"
+  },
+  {
+    "Field": "InvoiceTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "LastModify",
+    "TWCaption": null
+  },
+  {
+    "Field": "LastOP",
+    "TWCaption": null
+  },
+  {
+    "Field": "Machine",
+    "TWCaption": null
+  },
+  {
+    "Field": "Man",
+    "TWCaption": null
+  },
+  {
+    "Field": "MeTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "NeedRole",
+    "TWCaption": null
+  },
+  {
+    "Field": "NetSaleTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "NoInvoice",
+    "TWCaption": null
+  },
+  {
+    "Field": "NotInvoiceList",
+    "TWCaption": null
+  },
+  {
+    "Field": "OPERATOR",
+    "TWCaption": null
+  },
+  {
+    "Field": "OpSeg",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderCode",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderFlag",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderFoodCount",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderIndex",
+    "TWCaption": null
+  },
+  {
+    "Field": "OrderNo",
+    "TWCaption": "前台訂單編號"
+  },
+  {
+    "Field": "OrderNo2",
+    "TWCaption": "訂單編號"
+  },
+  {
+    "Field": "OrderStatus",
+    "TWCaption": "訂單狀態"
+  },
+  {
+    "Field": "OrderType",
+    "TWCaption": null
+  },
+  {
+    "Field": "OverTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "packageFee",
+    "TWCaption": "餐盒費(外帶打包費)"
+  },
+  {
+    "Field": "PaidUpTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PayChannel",
+    "TWCaption": "付款方式"
+  },
+  {
+    "Field": "PayCode",
+    "TWCaption": "第三方支付流水號"
+  },
+  {
+    "Field": "PaymentTime",
+    "TWCaption": "繳帳時間"
+  },
+  {
+    "Field": "PaymentTimeOP",
+    "TWCaption": "繳帳人"
+  },
+  {
+    "Field": "PayMoney",
+    "TWCaption": "支付金額"
+  },
+  {
+    "Field": "PayStatus",
+    "TWCaption": "付款狀態"
+  },
+  {
+    "Field": "PayTime",
+    "TWCaption": "線上金流付款時間"
+  },
+  {
+    "Field": "PayTotal",
+    "TWCaption": "付款金額"
+  },
+  {
+    "Field": "Points",
+    "TWCaption": null
+  },
+  {
+    "Field": "Pots",
+    "TWCaption": null
+  },
+  {
+    "Field": "PreWay",
+    "TWCaption": "取貨方式"
+  },
+  {
+    "Field": "PrintStatus",
+    "TWCaption": "新單列印狀態(接單APP)"
+  },
+  {
+    "Field": "PrintStatusTime",
+    "TWCaption": "新單印單時間(接單APP)"
+  },
+  {
+    "Field": "PromoteID",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldCheckTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldPayTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldTotalAgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "PromoteOldTotalAgioPercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "PTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "RealTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "ReceiptOP",
+    "TWCaption": "接單人"
+  },
+  {
+    "Field": "ReceiptTime",
+    "TWCaption": "接單時間"
+  },
+  {
+    "Field": "ReceiverMark",
+    "TWCaption": "訂單備註"
+  },
+  {
+    "Field": "ReceiverName",
+    "TWCaption": "收件人名稱"
+  },
+  {
+    "Field": "RelOrderID",
+    "TWCaption": null
+  },
+  {
+    "Field": "ReturnMachine",
+    "TWCaption": null
+  },
+  {
+    "Field": "ReturnOP",
+    "TWCaption": "拒絕接單操作人"
+  },
+  {
+    "Field": "ReturnOP2",
+    "TWCaption": "退訂操作人"
+  },
+  {
+    "Field": "ReturnOP3",
+    "TWCaption": "取餐後退訂操作人"
+  },
+  {
+    "Field": "ReturnShift",
+    "TWCaption": null
+  },
+  {
+    "Field": "ReturnTime",
+    "TWCaption": "拒絕接單操作時間"
+  },
+  {
+    "Field": "ReturnTime2",
+    "TWCaption": "退訂時間"
+  },
+  {
+    "Field": "ReturnTime3",
+    "TWCaption": "取餐後退訂操作時間"
+  },
+  {
+    "Field": "ReturnTime4",
+    "TWCaption": "線上金流退款時間"
+  },
+  {
+    "Field": "ReturnWorkDate",
+    "TWCaption": null
+  },
+  {
+    "Field": "RL1",
+    "TWCaption": null
+  },
+  {
+    "Field": "RL2",
+    "TWCaption": null
+  },
+  {
+    "Field": "RL3",
+    "TWCaption": null
+  },
+  {
+    "Field": "RL4",
+    "TWCaption": null
+  },
+  {
+    "Field": "SaleTime",
+    "TWCaption": "訂單時間"
+  },
+  {
+    "Field": "SaleType",
+    "TWCaption": "交易類別"
+  },
+  {
+    "Field": "SaleType_delivery",
+    "TWCaption": "外送點餐"
+  },
+  {
+    "Field": "SaleType_DeskPay",
+    "TWCaption": "桌上點餐"
+  },
+  {
+    "Field": "SaleType_ELE",
+    "TWCaption": "餓了嗎外送"
+  },
+  {
+    "Field": "SaleType_homedelivery",
+    "TWCaption": "宅配訂單"
+  },
+  {
+    "Field": "SaleType_resdelivery",
+    "TWCaption": "預訂外送"
+  },
+  {
+    "Field": "SaleType_restakeout",
+    "TWCaption": "預訂外帶"
+  },
+  {
+    "Field": "SaleType_scaneDesk",
+    "TWCaption": "桌上點餐"
+  },
+  {
+    "Field": "SaleType_takeout",
+    "TWCaption": "外帶點餐"
+  },
+  {
+    "Field": "SaleType_usecash",
+    "TWCaption": "使用現金"
+  },
+  {
+    "Field": "ServicePercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "ServiceTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "SexType",
+    "TWCaption": null
+  },
+  {
+    "Field": "Shift",
+    "TWCaption": null
+  },
+  {
+    "Field": "ShopID",
+    "TWCaption": "門店"
+  },
+  {
+    "Field": "TakeWayOP2",
+    "TWCaption": "接單人"
+  },
+  {
+    "Field": "TakeWayTime",
+    "TWCaption": "預計取餐/送達時間"
+  },
+  {
+    "Field": "TakeWayTime2",
+    "TWCaption": "預計取餐/送達時間"
+  },
+  {
+    "Field": "TendTotal",
+    "TWCaption": null
+  },
+  {
+    "Field": "Total",
+    "TWCaption": "小計"
+  },
+  {
+    "Field": "TotalAgioCost",
+    "TWCaption": null
+  },
+  {
+    "Field": "TotalAgioPercent",
+    "TWCaption": null
+  },
+  {
+    "Field": "TradePoints",
+    "TWCaption": null
+  },
+  {
+    "Field": "TransTime",
+    "TWCaption": null
+  },
+  {
+    "Field": "UnCheckTotal",
+    "TWCaption": "未付金額"
+  },
+  {
+    "Field": "VendNo",
+    "TWCaption": "統一編號"
+  },
+  {
+    "Field": "VipAddr",
+    "TWCaption": "訂單地址"
+  },
+  {
+    "Field": "VIPName",
+    "TWCaption": "會員姓名"
+  },
+  {
+    "Field": "VIPNo",
+    "TWCaption": "會員編號"
+  },
+  {
+    "Field": "VipState",
+    "TWCaption": null
+  },
+  {
+    "Field": "VIPTel",
+    "TWCaption": "會員手機"
+  },
+  {
+    "Field": "VIPType",
+    "TWCaption": null
+  },
+  {
+    "Field": "Visitors",
+    "TWCaption": null
+  },
+  {
+    "Field": "weborderid",
+    "TWCaption": null
+  },
+  {
+    "Field": "WechatOpenID",
+    "TWCaption": "微信OpenID"
+  },
+  {
+    "Field": "Woman",
+    "TWCaption": null
+  },
+  {
+    "Field": "WorkDate",
+    "TWCaption": null
+  },
+  {
+    "Field": "WorkTime",
+    "TWCaption": null
+  }
+]

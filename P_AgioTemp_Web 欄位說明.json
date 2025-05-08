@@ -1,0 +1,166 @@
+[
+  {
+    "Field": "After_points",
+    "TWCaption": "After_points"
+  },
+  {
+    "Field": "Ag_memo",
+    "TWCaption": "Ag_memo"
+  },
+  {
+    "Field": "AgioCost",
+    "TWCaption": "AgioCost"
+  },
+  {
+    "Field": "AgioGroup",
+    "TWCaption": "AgioGroup"
+  },
+  {
+    "Field": "AgioKind",
+    "TWCaption": "AgioKind"
+  },
+  {
+    "Field": "AgioPercent",
+    "TWCaption": "AgioPercent"
+  },
+  {
+    "Field": "AgioReason",
+    "TWCaption": "AgioReason"
+  },
+  {
+    "Field": "AgioReasonName",
+    "TWCaption": "AgioReasonName"
+  },
+  {
+    "Field": "AgioServTotal",
+    "TWCaption": "AgioServTotal"
+  },
+  {
+    "Field": "AgioTotal",
+    "TWCaption": "AgioTotal"
+  },
+  {
+    "Field": "AgioType",
+    "TWCaption": "AgioType"
+  },
+  {
+    "Field": "before_points",
+    "TWCaption": "before_points"
+  },
+  {
+    "Field": "CloseMachine",
+    "TWCaption": "CloseMachine"
+  },
+  {
+    "Field": "EnterpriseID",
+    "TWCaption": "EnterpriseID"
+  },
+  {
+    "Field": "GroupOn_Bak",
+    "TWCaption": "GroupOn_Bak"
+  },
+  {
+    "Field": "GroupOn_ID",
+    "TWCaption": "GroupOn_ID"
+  },
+  {
+    "Field": "GroupOn_NO",
+    "TWCaption": "GroupOn_NO"
+  },
+  {
+    "Field": "GroupOn_ROC",
+    "TWCaption": "GroupOn_ROC"
+  },
+  {
+    "Field": "ID",
+    "TWCaption": "ID"
+  },
+  {
+    "Field": "ItemID",
+    "TWCaption": "ItemID"
+  },
+  {
+    "Field": "LastModify",
+    "TWCaption": "LastModify"
+  },
+  {
+    "Field": "LastOP",
+    "TWCaption": "LastOP"
+  },
+  {
+    "Field": "opseg",
+    "TWCaption": "opseg"
+  },
+  {
+    "Field": "OrderID",
+    "TWCaption": "OrderID"
+  },
+  {
+    "Field": "Owner",
+    "TWCaption": "Owner"
+  },
+  {
+    "Field": "ReasonID",
+    "TWCaption": "ReasonID"
+  },
+  {
+    "Field": "ReasonName",
+    "TWCaption": "ReasonName"
+  },
+  {
+    "Field": "Redeemed_points",
+    "TWCaption": "Redeemed_points"
+  },
+  {
+    "Field": "Redeemed_points1",
+    "TWCaption": "Redeemed_points1"
+  },
+  {
+    "Field": "servTotal",
+    "TWCaption": "servTotal"
+  },
+  {
+    "Field": "ShopID",
+    "TWCaption": "ShopID"
+  },
+  {
+    "Field": "SourceKind",
+    "TWCaption": "SourceKind"
+  },
+  {
+    "Field": "subTotal",
+    "TWCaption": "subTotal"
+  },
+  {
+    "Field": "Total",
+    "TWCaption": "Total"
+  },
+  {
+    "Field": "TotalAgioCost",
+    "TWCaption": "TotalAgioCost"
+  },
+  {
+    "Field": "TotalAgioPercent",
+    "TWCaption": "TotalAgioPercent"
+  },
+  {
+    "Field": "TotalAgioTotal",
+    "TWCaption": "TotalAgioTotal"
+  },
+  {
+    "Field": "TransTime",
+    "TWCaption": "TransTime"
+  },
+  {
+    "Field": "UploadMachine",
+    "TWCaption": "UploadMachine"
+  },
+  {
+    "Field": "WorkDate",
+    "TWCaption": "WorkDate"
+  },
+  {
+    "Field": "WorkTime",
+    "TWCaption": "WorkTime"
+  }
+]

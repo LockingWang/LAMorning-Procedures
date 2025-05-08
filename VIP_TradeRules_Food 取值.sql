@@ -1,0 +1,12 @@
+SELECT TOP (1000) [GID]
+      ,[LastOP]
+      ,[LastModify]
+      ,[EnterPriseID]
+      ,[TradeRuleCode]
+      ,[FoodID]
+      ,[FoodName]
+      ,[IsSaleFood]
+      ,[IsFoodKind]
+      ,[Remark]
+  FROM [NCW_xurf].[dbo].[VIP_TradeRules_Food]
+  WHERE EnterPriseID = 'xurf'

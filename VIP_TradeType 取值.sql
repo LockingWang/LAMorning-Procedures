@@ -1,0 +1,11 @@
+SELECT TOP (1000) [GID]
+      ,[LastOP]
+      ,[LastModify]
+      ,[TradeTypeCode]
+      ,[TradeTypeName]
+      ,[Remark]
+      ,[TradeKindCode]
+      ,[TradeKindName]
+      ,[CanTradeBack]
+  FROM [NCW_xurf].[dbo].[VIP_TradeType]
+  WHERE TradeTypeCode = 'T2'
