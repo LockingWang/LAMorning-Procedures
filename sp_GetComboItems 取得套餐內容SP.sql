@@ -70,10 +70,9 @@ WHERE
     AND fshop.shopid = @shopId
     AND fm.status = 9
     AND fm.MouldType = CASE @orderType
-        -- 名謙後端orderType代碼認知錯誤，在SP予以導正。
-        WHEN '3' THEN 2 -- takeout 
-        WHEN '2' THEN 5 -- delivery 
-        WHEN '1' THEN 6 -- scaneDesk 
+        WHEN 'takeout' THEN 2
+        WHEN 'delivery' THEN 5
+        WHEN 'scaneDesk' THEN 6
     END 
 ORDER BY PEK.EntKindNo;  
 END
