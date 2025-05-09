@@ -1,4 +1,5 @@
 SELECT TOP (1000) [GID]
+,[BirthDayRuleType]
       ,[LastOP]
       ,[LastModify]
       ,[EnterPriseID]
@@ -48,3 +49,4 @@ SELECT TOP (1000) [GID]
       ,[RemarkEn]
   FROM [NCW_xurf].[dbo].[VIP_TradeRules]
   WHERE EnterPriseID = 'xurf'
+--   AND TradeRuleCode = 'harry-test-008'

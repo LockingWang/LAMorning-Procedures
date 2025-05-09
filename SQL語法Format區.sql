@@ -1,58 +1,25 @@
--- 會員卡優惠規則
-if exists (select * from VIP_TradeRules where TradeRuleCode = ':TradeRuleCode')
-begin
-    select 1 as flag, '已經有被使用過' as text
-end
-else
-begin
-    declare
-        @BeginDate date,
-        @EndDate date,
-        @BeginTime datetime,
-        @EndTime datetime
-    
-    set @BeginDate = ':BeginDate'
-    set @EndDate = ':EndDate'
-    set @BeginTime = ':BeginTime'
-    set @EndTime = ':EndTime'
-    
-    if (@BeginDate = '')
-        set @BeginDate = null
-    if (@EndDate = '')
-        set @EndDate = null
-    if (@BeginTime = '')
-        set @BeginTime = null
-    if (@EndTime = '')
-        set @EndTime = null
-    
-    insert into VIP_TradeRules (
-        GID, EnterPriseID, TradeRuleCode, TradeRuleName, CardTypeCode,
-        Priority, TradeAmount, PresentPoint, IsTimes, BrithTimes,
-        IsUseDate, MaxUseCount, UseCountIsShop, ConfirmUseCount, TradeTypeCode,
-        BeginDate, EndDate, BeginTime, EndTime,
-        Week1, Week2, Week3, Week4, Week5, Week6, Week7
-    )
-    values (
-        ':GID', :EnterPriseID, ':TradeRuleCode', ':TradeRuleName', ':CardTypeCode',
-        ':Priority', ':TradeAmount', ':PresentPoint', ':IsTimes', ':BrithTimes',
-        ':IsUseDate', ':MaxUseCount', ':UseCountIsShop', ':ConfirmUseCount', '1',
-        ':BeginDate', ':EndDate', ':BeginTime', ':EndTime',
-        ':Week1', ':Week2', ':Week3', ':Week4', ':Week5', ':Week6', ':Week7'
-    )
-    
-    select 0 as flag, '尚未被使用過,新增成功' as text
-end
-
-
--- 優惠券使用規則
-insert into VIP_TradeRules (
-    GID, EnterPriseID, TradeRuleCode, TradeRuleName, CardTypeCode,
-    Priority, BeginDate, EndDate, BirthDayRuleType, IsStopGive,
-    Week1, Week2, Week3, Week4, Week5, Week6, Week7,
-    BeginTime, EndTime, Remark, TradeTypeCode
-) values (
-    ':GID', :EnterPriseID, ':TradeRuleCode', ':TradeRuleName', ':CardTypeCode',
-    ':Priority', ':BeginDate', ':EndDate', ':BirthDayRuleType', ':IsStopGive',
-    ':Week1', ':Week2', ':Week3', ':Week4', ':Week5', ':Week6', ':Week7',
-    null, null, ':Remark', 'T2'
-)
+SELECT 
+    t1.GID,
+    t1.EnterPriseID,
+    t1.CardTypeCode1,
+    t1.CardTypeCode2, 
+    t1.Days,
+    t1.CumulativeSales,
+    t1.CumulativeBalance,
+    t1.TradeRuleCode,
+    t1.Remarks,
+    t1.CardTypeName1,
+    t2.CardTypeName AS CardTypeName2
+FROM (
+    SELECT 
+        a.*,
+        b.CardTypeName AS CardTypeName1
+    FROM VIP_CardUpgradeRules AS a
+    INNER JOIN VIP_CardType AS b 
+        ON a.EnterPriseID = b.EnterPriseID 
+        AND a.CardTypeCode1 = b.CardTypeCode
+    WHERE a.EnterPriseID = :EnterPriseID
+) AS t1
+INNER JOIN VIP_CardType t2
+    ON t1.EnterPriseID = t2.EnterPriseID 
+    AND t1.CardTypeCode2 = t2.CardTypeCode

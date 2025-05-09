@@ -1,0 +1,12 @@
+SELECT TOP (1000) [GID]
+      ,[LastOP]
+      ,[LastModify]
+      ,[EnterPriseID]
+      ,[GUID]
+      ,[TradeRuleCode]
+      ,[TicketTypeCode]
+      ,[PresentTicketCount]
+      ,[Remark]
+      ,[TradeAmount_ticket]
+  FROM [NCW_xurf].[dbo].[VIP_TradeRules_Ticket]
+  WHERE EnterPriseID = 'xurf'
