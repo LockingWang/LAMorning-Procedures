@@ -1,3 +1,10 @@
+/*
+預存程序名稱：sp_GetShopInfo
+功能說明：取得門市相關設定資訊，包含外帶、外送、內用設定、桌位資訊、橫幅圖片等
+參數說明：
+    @EnterpriseID VARCHAR(20) - 企業ID
+    @ShopID VARCHAR(10) - 門市ID
+*/
 CREATE OR ALTER PROCEDURE [dbo].[sp_GetShopInfo]
     @EnterpriseID VARCHAR(20),
     @ShopID VARCHAR(10)
@@ -5,12 +12,13 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    -- 取得各種模式的設定值（外帶、外送、內用）
     ;WITH SettingsData AS (
         SELECT 
-            CASE ASM.ModeID 
+            CASE ASM.ModeID
                 WHEN 'takeout' THEN 'takeoutSettings'
                 WHEN 'delivery' THEN 'deliverySettings'
-                WHEN 'scaneDesk' THEN 'dineInSettings'
+                WHEN 'scaneDesk' THEN 'dineInSettings'' THEN 'appSttings
             END AS SettingType,
             ASD.Name AS Name,
             CASE 
@@ -24,12 +32,14 @@ BEGIN
             AND ASS.EnterpriseID = @EnterpriseID 
             AND ASS.ShopID = @ShopID
     ),
+    -- 取得企業橫幅圖片路徑
     BannerData AS (
         SELECT TOP 1 Dir AS bannerImagePath
         FROM S_UploadFile 
         WHERE enterpriseid = @EnterpriseID 
         AND vType = 'E_Banner'
     ),
+    -- 取得門市桌位資訊
     DeskData AS (
         SELECT 
             GID AS id,
@@ -39,6 +49,7 @@ BEGIN
         WHERE EnterpriseID = @EnterpriseID
         AND ShopID = @ShopID
     ),
+    -- 取得門市基本資訊
     ShopData AS (
         SELECT 
             OrgName AS shopName,
@@ -48,9 +59,11 @@ BEGIN
         WHERE EnterpriseID = @EnterpriseID
         AND OrgCode = @ShopID
     )
+    -- 組合所有資訊並以 JSON 格式回傳
     SELECT 
         (
             SELECT 
+                -- 外帶設定
                 (
                     SELECT 
                         Name AS [key],
@@ -59,6 +72,7 @@ BEGIN
                     WHERE SettingType = 'takeoutSettings'
                     FOR JSON PATH
                 ) AS takeoutSettings,
+                -- 內用設定
                 (
                     SELECT
                         Name AS [key],
@@ -67,6 +81,7 @@ BEGIN
                     WHERE SettingType = 'dineInSettings'
                     FOR JSON PATH
                 ) AS dineInSettings,
+                -- 外送設定
                 (
                     SELECT
                         Name AS [key],
@@ -75,12 +90,15 @@ BEGIN
                     WHERE SettingType = 'deliverySettings'
                     FOR JSON PATH
                 ) AS deliverySettings,
+                -- 桌位資訊
                 (
                     SELECT *
                     FROM DeskData
                     FOR JSON PATH
                 ) AS dineInTables,
+                -- 橫幅圖片路徑
                 (SELECT bannerImagePath FROM BannerData) AS bannerImagePath,
+                -- 門市基本資訊
                 JSON_QUERY((
                     SELECT 
                         ShopName,
@@ -89,6 +107,7 @@ BEGIN
                     FROM ShopData
                     FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
                 )) AS shopInfo,
+                -- 發票設定
                 JSON_QUERY('{ 
                   "IsEnabled": true, 
                   "InvoiceTypes": { 
