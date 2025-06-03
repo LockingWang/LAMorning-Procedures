@@ -1,159 +1,88 @@
-SET XACT_ABORT ON;
-
-BEGIN TRY
-    BEGIN TRANSACTION;
-
-    DECLARE @enterpriseid VARCHAR(50),
-            @pro_code VARCHAR(50),
-            @statustime DATETIME;
-
-    SET @enterpriseid = :EnterpriseID;
-    SET @pro_code = ':pro_code';
-    SET @statustime = GETDATE();
-
-    -- 先鎖住
-    UPDATE VIP_ProMotion
-    SET status = 2,
-        StatusPersonal = :UserCode,
-        StatusTime = @statustime
-    WHERE Pro_Code = @pro_code
-      AND EnterPriseID = @enterpriseid;
-
-    DECLARE @tcount INT,
-            @time1 DATETIME,
-            @time2 DATETIME,
-            @cardtradenum VARCHAR(50),
-            @ticketinfoid VARCHAR(50),
-            @tradenum VARCHAR(50);
-
-    SET @time1 = GETDATE();
-    SET @cardtradenum = NEWID();
-
-    DECLARE @MemberNO VARCHAR(50),
-            @CardID VARCHAR(50),
-            @CardNO VARCHAR(50),
-            @TicketTypeCode VARCHAR(50),
-            @PresentTicketCount INT,
-            @ShopID VARCHAR(100),
-            @TicketPrice INT,
-            @ExpiredDate VARCHAR(10),
-            @TicketDiscount DECIMAL(14,2);
-
-    DECLARE cursor0 CURSOR FOR
-    SELECT b.MemberNO, e.CardID, e.CardNO,
-           c.TicketTypeCode, PresentTicketCount, a.ShopID, d.TicketPrice,
-           CASE
-               WHEN ValidType = 1 THEN CONVERT(VARCHAR(10), DATEADD(DAY, ValidDays, GETDATE()), 120)
-               WHEN ValidType = 2 THEN '9999-12-31'
-               WHEN ValidType = 3 THEN CONVERT(VARCHAR(10), ExpiredDate, 120)
-           END AS ExpiredDate,
-           d.TicketDiscount
-    FROM VIP_ProMotion a
-    JOIN VIP_Promotion_MemberNos b ON a.Pro_Code = b.Pro_Code AND a.EnterPriseID = b.EnterPriseID
-    JOIN VIP_Promotion_Ticket c ON a.Pro_Code = c.Pro_Code AND a.EnterPriseID = c.EnterPriseID
-    JOIN VIP_TicketType d ON c.TicketTypeCode = d.TicketTypeCode AND c.EnterPriseID = d.EnterPriseID
-    JOIN VIP_Info e ON b.MemberNO = e.MemberNO AND b.EnterPriseID = e.EnterPriseID
-    WHERE a.Pro_Code = @pro_code AND a.EnterPriseID = @enterpriseid;
-
-    OPEN cursor0;
-
-    FETCH NEXT FROM cursor0 INTO @MemberNO, @CardID, @CardNO, @TicketTypeCode, @PresentTicketCount,
-                                 @ShopID, @TicketPrice, @ExpiredDate, @TicketDiscount;
-
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        SET @time2 = GETDATE();
-        SET @tcount = 1;
-
-        WHILE @tcount <= @PresentTicketCount
-        BEGIN
-            SET @ticketinfoid = NEWID();
-            SET @tradenum = NEWID();
-
-            INSERT INTO VIP_TicketInfo (
-                GID, EnterPriseID, TicketInfoID, TradeNum, MemberNO, CardNO, CardID,
-                TicketTypeCode, StartTicketCount, TicketCount, TicketPrice, TicketTotal, StartTicketTotal,
-                TicketBgnNo, TicketEndNo,
-                TicketExpiredDate,
-                GenTradetime, Remark, CardTradeNum, GenReason, TradeRuleCode
-            )
-            VALUES (
-                NEWID(), @enterpriseid, @ticketinfoid, @tradenum, @MemberNO, @CardNO, @CardID,
-                @TicketTypeCode, 1, 1, @TicketPrice, @TicketPrice, 1,
-                @ticketinfoid, @ticketinfoid,
-                @ExpiredDate,
-                @time1, '促銷贈券', @cardtradenum, 'VipProMotion', @pro_code
-            );
-
-            INSERT INTO VIP_Trade_Ticket (
-                GID, EnterPriseID, TradeTime, TradeNum, MemberNO, CardNO, CardID,
-                ShopID, TicketInfoID, TicketCount, TicketPrice, TicketTotal,
-                TicketTypeCode, TicketBgnNO, TicketEndNo, CardTradeNum, TicketDisCount, LastModify, TradeTypeCode
-            )
-            VALUES (
-                NEWID(), @enterpriseid, @time2, @tradenum, @MemberNO, @CardNO, @CardID,
-                @ShopID, @ticketinfoid, 1, @TicketPrice, @TicketPrice,
-                @TicketTypeCode, @ticketinfoid, @ticketinfoid, @cardtradenum, @TicketDisCount, @time2, '1'
-            );
-
-            SET @tcount = @tcount + 1;
-        END;
-
-        FETCH NEXT FROM cursor0 INTO @MemberNO, @CardID, @CardNO, @TicketTypeCode, @PresentTicketCount,
-                                     @ShopID, @TicketPrice, @ExpiredDate, @TicketDiscount;
-    END;
-
-    CLOSE cursor0;
-    DEALLOCATE cursor0;
-
-    UPDATE VIP_TicketInfo
-    SET MAC = SUBSTRING(sys.fn_sqlvarbasetostr(HASHBYTES('MD5',
-        CAST(b.MemberNO AS VARCHAR(50)) +
-        CAST(b.CardID AS VARCHAR(50)) +
-        CAST(b.CardNO AS VARCHAR(50)) +
-        b.TradeNum +
-        CAST(ISNULL(b.OrderID,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.OrderNO,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.CheckID,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.ItemID,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.FoodKind,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.FoodID,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.TicketTotal,0) AS VARCHAR(10)) + '.00' +
-        b.TicketInfoID +
-        b.TicketTypeCode +
-        CAST(ISNULL(b.TicketPrice,0) AS VARCHAR(10)) + '.00' +
-        b.TicketInfoID +
-        b.TicketTypeCode +
-        CAST(ISNULL(b.TicketPrice,0) AS VARCHAR(10)) +
-        CAST(ISNULL(b.Operator,'') AS VARCHAR(50)) +
-        CAST(ISNULL(b.OldTradeNum,'') AS VARCHAR(50))
-    )), 3, 32)
-    FROM VIP_TicketInfo a
-    JOIN VIP_Trade_Ticket b ON a.EnterPriseID = b.EnterPriseID AND a.TradeNum = b.TradeNum
-    WHERE a.TradeRuleCode = @pro_code
-      AND a.EnterPriseID = @enterpriseid
-      AND a.CardTradeNum = @cardtradenum;
-
-    UPDATE VIP_Trade_Ticket
-    SET MAC = a.MAC
-    FROM VIP_TicketInfo a
-    JOIN VIP_Trade_Ticket b ON a.EnterPriseID = b.EnterPriseID AND a.TradeNum = b.TradeNum
-    WHERE a.TradeRuleCode = @pro_code
-      AND a.EnterPriseID = @enterpriseid
-      AND a.CardTradeNum = @cardtradenum;
-
-    COMMIT TRANSACTION;
-END TRY
-BEGIN CATCH
-    SELECT ERROR_MESSAGE() AS ErrorCode;
-    ROLLBACK TRANSACTION;
-    THROW;
-END CATCH;
-
-/* 
-UPDATE VIP_ProMotion
-SET status = 2
-WHERE EnterPriseID = :EnterPriseID
-  AND GID = ':GID'
-  AND status = 1;
-*/
+CREATE PROCEDURE [dbo].[sp_GetVIPCouponsByShop] 
+    @enterpriseId NVARCHAR(50), -- 企業號Id 
+    @memberNo NVARCHAR(50),     -- 會員No 
+    @ShopId NVARCHAR(50)        -- 門市Id 
+AS 
+BEGIN 
+    SET NOCOUNT ON; 
+         
+    SELECT DISTINCT  
+	    a.TicketInfoID AS CouponId, 
+	    d.PicUrl AS ImagePath, 
+	    d.TicketTypeName AS CouponName, 
+		NULL AS BeginDate, 
+	    b.EndDate, 
+	    NULL AS TradeTime, 
+	    1 AS Count, 
+		0 AS Status 
+	FROM VIP_TicketInfo a 
+	LEFT JOIN VIP_TradeRules b  
+	    ON a.EnterPriseID = b.EnterPriseID  
+	    AND a.TradeRuleCode = b.TradeRuleCode 
+	LEFT JOIN VIP_Trade_Ticket c 
+	    ON a.EnterPriseID = c.EnterPriseID 
+	    AND a.TicketInfoID = c.TicketInfoID 
+	LEFT JOIN VIP_TicketType d 
+	    ON a.EnterPriseID = d.EnterPriseID  
+	    AND a.TicketTypeCode = d.TicketTypeCode 
+	WHERE a.MemberNO = @MemberNo 
+	AND a.EnterPriseID = @EnterPriseID 
+	AND a.TicketCount > 0 
+	AND c.ShopID = @ShopID 
+	AND ( 
+	    b.EndDate IS NULL  
+	    OR CONCAT(b.EndDate, ' ', CONVERT(VARCHAR, b.EndTime, 114)) >= GETDATE() 
+	) 
+     
+    UNION ALL 
+     
+	SELECT DISTINCT 
+	    a.TicketInfoID AS CouponId, 
+	    c.PicUrl AS ImagePath, 
+	    c.TicketTypeName AS CouponName, 
+	    b.BeginDate,	--開始日期 
+		b.EndDate,		--結束日期 
+		NULL AS TradeTime, 
+		1 AS Count, 
+		1 AS Status 
+	FROM VIP_TicketInfo a 
+	LEFT JOIN VIP_TradeRules b  
+	    ON a.EnterPriseID = b.EnterPriseID  
+	    AND a.TradeRuleCode = b.TradeRuleCode 
+	LEFT JOIN VIP_TicketType c  
+	    ON a.EnterPriseID = c.EnterPriseID  
+	    AND a.TicketTypeCode = c.TicketTypeCode 
+	LEFT JOIN VIP_Trade_Ticket d  
+	    ON a.EnterPriseID = d.EnterPriseID  
+	    AND a.TicketInfoID = d.TicketInfoID 
+	WHERE a.EnterPriseID = @EnterPriseID 
+	  AND a.MemberNO = @MemberNo 
+	  AND a.TicketCount > 0 
+	  AND d.ShopID = @ShopID  -- 限制優惠券適用的門店 
+	  AND (b.BeginDate IS NOT NULL  
+	       AND CONCAT(b.BeginDate, ' ', CONVERT(VARCHAR, b.BeginTime, 114)) > GETDATE()) 
+	 
+	UNION ALL 
+	 
+	SELECT  
+	    a.TicketInfoID AS CouponId, 
+	    b.PicUrl AS ImagePath, 
+	    b.TicketTypeName AS CouponName, 
+		NULL AS BeginDate,       -- 有效期限(起) 
+		NULL AS EndDate,       -- 有效期限(迄) 
+	    a.TradeTime, --轉贈日期  
+		1 AS Count,                    -- 張數 
+		2 AS Status -- 優惠券狀態 0:可使用,1:未生效,2:已轉贈 
+	FROM VIP_Trade_Ticket a 
+	LEFT JOIN VIP_TicketInfo c  
+	    ON a.EnterPriseID = c.EnterPriseID  
+	    AND c.TIfrom_GID = a.TicketInfoID 
+	INNER JOIN Vip_TicketType b  
+	    ON a.TicketTypeCode = b.TicketTypeCode  
+	    AND a.EnterPriseID = b.EnterPriseID 
+	WHERE a.TradeTypeCode = '11'  -- 轉贈類型 
+	AND a.EnterPriseID = @EnterPriseID 
+	AND a.MemberNO = @MemberNo 
+	AND a.ShopID = @ShopID;  -- 加入門店條件 
+ 
+END

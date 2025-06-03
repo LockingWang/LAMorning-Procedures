@@ -1,2 +1,2 @@
 -- 查詢SP內容
-EXEC sp_helptext 'sp_GetCouponByMember';
+EXEC sp_helptext 'sp_GetVIPCouponsByShop';

@@ -25,4 +25,3 @@ SELECT TOP (1000) [GID]
       ,[TicketTypeNameEn]
   FROM [NCW_xurf].[dbo].[VIP_TicketType]
   WHERE EnterPriseID = '90367984'
-  AND 

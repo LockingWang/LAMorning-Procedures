@@ -13,10 +13,11 @@ BEGIN
     SET NOCOUNT ON;  
   
     SELECT   
-        V_TI.CardTradeNum, -- 優惠券ID  
+        V_TI.CardTradeNum, -- 批次交易號碼  
+        V_TI.TicketInfoID, -- 優惠券資料ID
         V_TI.TicketTypeCode, -- 優惠券代碼  
+        V_TI.TicketCount, -- 優惠券張數
         V_TI.TicketExpiredDate, -- 有效期限  
-        V_TI.GenTradetime, -- 取得時間  
   
         V_TT.TicketTypeName, -- 優惠卷名稱  
         V_TT.TicketFlag, -- 優惠卷類型(現金券、折扣券...)  
@@ -54,4 +55,5 @@ BEGIN
     AND V_TI.MemberNO = @memberNo  
     AND V_TI.TicketCount > 0
     AND V_TI.TicketExpiredDate >= CAST(GETDATE() AS DATE)
+    ORDER BY V_TI.TicketExpiredDate ASC
 END

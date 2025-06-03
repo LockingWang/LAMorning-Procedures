@@ -1,8 +1,9 @@
-CREATE PROCEDURE [dbo].[sp_GetVIPCouponsByShop] 
-    @enterpriseId NVARCHAR(50), -- 企業號Id
-    @memberNo NVARCHAR(50),     -- 會員No
-    @ShopId NVARCHAR(50)        -- 門市Id
+CREATE OR ALTER PROCEDURE [dbo].[sp_GetVIPCouponsByShop] 
+    @enterpriseId NVARCHAR(50), -- 企業號Id 
+    @memberNo NVARCHAR(50),     -- 會員No 
+    @ShopId NVARCHAR(50)        -- 門市Id 
 AS 
+
 BEGIN 
     SET NOCOUNT ON; 
 --     
@@ -20,9 +21,20 @@ BEGIN
     SELECT DISTINCT  
 	    a.TicketInfoID AS CouponId, 
 	    d.PicUrl AS ImagePath, 
-	    d.TicketTypeName AS CouponName, 
+	    d.TicketTypeName AS CouponName,
+        CASE d.TicketFlag  
+            WHEN 1 THEN '現金券' 
+            WHEN 2 THEN '商品抵用券' 
+            WHEN 3 THEN '商品折扣券' 
+            WHEN 4 THEN '現金折扣' 
+            WHEN 5 THEN '整單折扣券' 
+            WHEN 6 THEN '運費折讓券' 
+            WHEN 7 THEN '商品兌換券' 
+            ELSE '未知類型'
+	    END AS TicketType, 
 		NULL AS BeginDate, 
 	    b.EndDate, 
+	    a.TicketExpiredDate, --優惠券到期日 
 	    NULL AS TradeTime, 
 	    1 AS Count, 
 		0 AS Status 
@@ -51,6 +63,16 @@ BEGIN
 	    a.TicketInfoID AS CouponId, 
 	    c.PicUrl AS ImagePath, 
 	    c.TicketTypeName AS CouponName, 
+        CASE c.TicketFlag  
+            WHEN 1 THEN '現金券' 
+            WHEN 2 THEN '商品抵用券' 
+            WHEN 3 THEN '商品折扣券' 
+            WHEN 4 THEN '現金折扣' 
+            WHEN 5 THEN '整單折扣券' 
+            WHEN 6 THEN '運費折讓券' 
+            WHEN 7 THEN '商品兌換券' 
+            ELSE '未知類型'
+	    END AS TicketType, 
 	    --a.TradeRuleCode, 
 	    --ISNULL(c.TicketTypeName, b.TradeRuleName) AS TicketTypeName, 
 	    --b.Week1, b.Week2, b.Week3, b.Week4, b.Week5, b.Week6, b.Week7, 
@@ -58,6 +80,7 @@ BEGIN
 	    --b.EndTime,		--結束時間 
 	    b.BeginDate,	--開始日期 
 		b.EndDate,		--結束日期 
+		a.TicketExpiredDate, --優惠券到期日 
 		NULL AS TradeTime, 
 		1 AS Count, 
 		1 AS Status 
@@ -98,10 +121,21 @@ BEGIN
 	    b.PicUrl AS ImagePath, 
 	--    b.TicketFlag, 
 	    b.TicketTypeName AS CouponName, 
+        CASE b.TicketFlag  
+            WHEN 1 THEN '現金券' 
+            WHEN 2 THEN '商品抵用券' 
+            WHEN 3 THEN '商品折扣券' 
+            WHEN 4 THEN '現金折扣' 
+            WHEN 5 THEN '整單折扣券' 
+            WHEN 6 THEN '運費折讓券' 
+            WHEN 7 THEN '商品兌換券' 
+            ELSE '未知類型'
+	    END AS TicketType, 
 	--    b.TicketTypeNameEn, 
-	--    c.CardID AS ToCardID   
+	--   c.CardID AS ToCardID   
 		NULL AS BeginDate,       -- 有效期限(起) 
 		NULL AS EndDate,       -- 有效期限(迄) 
+		c.TicketExpiredDate, --優惠券到期日 
 	    a.TradeTime, --轉贈日期  
 		1 AS Count,                    -- 張數 
 		2 AS Status -- 優惠券狀態 0:可使用,1:未生效,2:已轉贈 
