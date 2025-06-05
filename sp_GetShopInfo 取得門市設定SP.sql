@@ -95,7 +95,8 @@ BEGIN
                   "IsEnabled": true,  
                   "InvoiceTypes": {  
                       "PERSONAL": "紙本發票",  
-                      "COMPANY": "公司發票",  
+                      "COMPANY": "公司發票",
+                      "E_INVOICE": "電子載具",  
                       "DONATION": "捐贈發票"  
                   }  
                 }') AS InvoiceSettings 
