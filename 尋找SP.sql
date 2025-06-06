@@ -1,2 +1,2 @@
 -- 查詢SP內容
-EXEC sp_helptext 'sp_GetShopInfo_temp';
+EXEC sp_helptext 'sp_GetOrderDetail';

@@ -4,7 +4,6 @@ CREATE PROCEDURE [dbo].[sp_GetOrderDetail]
     @orderId NVARCHAR(50)   -- 訂單Id 
 AS 
 BEGIN 
-
 		SELECT  
 		    i.EnterpriseID, 
 		    i.SHOPID, 

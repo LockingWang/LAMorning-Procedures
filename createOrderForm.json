@@ -1,0 +1,231 @@
+{
+    "token": "",
+    "userCode": "",
+    "enterpriseId": "90367984",
+    "shopId": "A01",
+    "memberNo": "0975011014",
+    "Operator": "",
+    "Order": {
+        "ID": "75aac988-6c4c-4587-a0eb-0bd610c4c55d",
+        "DeskID": "Z5",
+        "Machine": "",
+        "ServiceTotal": 0,
+        "ServicePercent": 0,
+        "SaleTime": "2025-06-06T14:47:02.975Z",
+        "MeTime": "20250606144702",
+        "AgioDiscount": 0,
+        "Count": 2,
+        "OrderNo2": "",
+        "OrderType": 2,
+        "AppFunGID": "63fc66e7-db56-48f2-902e-88a19e00f4bd",
+        "ReceiverName": "Z5",
+        "ActivityShopPart": 0,
+        "Man": 0,
+        "Woman": 0,
+        "Child": 0,
+        "Baby": 0,
+        "Total": 235,
+        "PayTotal": 235,
+        "TendTotal": 0,
+        "InvoiceTotal": 0,
+        "VIPTel": "",
+        "VIPName": "Xiang",
+        "VipAddr": "",
+        "VipAddrHead": "",
+        "SaleType": "scaneDesk",
+        "ReturnWorkDate": "",
+        "OrderNo": "",
+        "SexType": "",
+        "DayType": "",
+        "RelOrderID": "",
+        "CardID": "",
+        "WechatOpenID": "",
+        "VIPNo": "0975011014",
+        "TakeWayTime": "2025-06-06T14:47:02.975Z",
+        "OrderFlag": 0,
+        "firmServiceFee": 0,
+        "deliverFee": 0,
+        "packageFee": 0,
+        "activityShopPart": 0,
+        "activityTotal": 0,
+        "activityFirmPart": 0,
+        "OrderCode": "",
+        "PayChannel": "InstorePay",
+        "PayChannelName": "櫃台付款",
+        "TakeWayTime2": "2025-06-06T14:47:02.975Z",
+        "ReceiverMark": "",
+        "OrderFoodCount": 2,
+        "CarrierId": "",
+        "PrintStatus": 0,
+        "BillType": "LINEapp",
+        "PayStatus": 0
+    },
+    "Items": [
+        {
+            "ID": "d0a38f95-a232-4cc4-9004-cb21bb10cecd",
+            "imagePath": "",
+            "FoodID": "Mp34889",
+            "KindID": "Mp",
+            "Count": 1,
+            "Price": 120,
+            "AddCost": 0,
+            "Total": 120,
+            "FoodName": "A套餐",
+            "InputTime": "2025-06-06T14:47:02.976Z",
+            "ServCost": false,
+            "Discount": true,
+            "TotalDiscount": true,
+            "SHOPID": "A01",
+            "SaleTime": "2025-06-06T14:47:02.976Z",
+            "OrderIndex": 1,
+            "ComboItems": [
+                {
+                    "comboId": "Mp",
+                    "itemName": "晨間廚房",
+                    "items": [
+                        {
+                            "foodId": "Mp45932",
+                            "foodName": "火腿蛋餅",
+                            "imagePath": "",
+                            "quantity": 1,
+                            "additionalPrice": 40,
+                            "optionItems": [],
+                            "remark": ""
+                        }
+                    ]
+                },
+                {
+                    "comboId": "Mp5",
+                    "itemName": "副餐",
+                    "items": [
+                        {
+                            "foodId": "Mp534902",
+                            "foodName": "薯餅",
+                            "imagePath": "https://staging.cloudxurf.com.tw/upload/90367984/food2/Mp534902.png?v20250501124258",
+                            "quantity": 1,
+                            "additionalPrice": 0,
+                            "optionItems": [],
+                            "remark": ""
+                        }
+                    ]
+                },
+                {
+                    "comboId": "Mp7",
+                    "itemName": "飲料",
+                    "items": [
+                        {
+                            "foodId": "Mp734906",
+                            "foodName": "古早味奶茶",
+                            "imagePath": "https://staging.cloudxurf.com.tw/upload/90367984/food2/Mp734906.png?v20250501124400",
+                            "quantity": 1,
+                            "additionalPrice": 0,
+                            "optionItems": [
+                                {
+                                    "foodId": "0072d001-71b4-46ba-8e62-bbfb124feea3",
+                                    "foodName": "大溫",
+                                    "imagePath": "",
+                                    "quantity": 1,
+                                    "additionalPrice": 10
+                                }
+                            ],
+                            "remark": ""
+                        }
+                    ]
+                }
+            ],
+            "CouponInfo": null,
+            "Memo": "",
+            "Taste": "",
+            "BatchID": "",
+            "Special": "",
+            "Special1": "",
+            "LegacyFoodName": "",
+            "Parent": "",
+            "Add": "",
+            "ChangePrice": false
+        },
+        {
+            "ID": "cb0b79db-4f67-48cd-8e5a-dc32076c52ae",
+            "imagePath": "https://staging.cloudxurf.com.tw/upload/90367984/food2/Mp34699.png?v20250506104510",
+            "FoodID": "Mp34699",
+            "KindID": "Mp",
+            "Count": 1,
+            "Price": 115,
+            "AddCost": 0,
+            "Total": 115,
+            "FoodName": "玉米蛋餅套餐",
+            "InputTime": "2025-06-06T14:47:02.976Z",
+            "ServCost": false,
+            "Discount": true,
+            "TotalDiscount": true,
+            "SHOPID": "A01",
+            "SaleTime": "2025-06-06T14:47:02.976Z",
+            "OrderIndex": 2,
+            "ComboItems": [
+                {
+                    "comboId": "Mp",
+                    "itemName": "晨間廚房",
+                    "items": [
+                        {
+                            "foodId": "Mp45932",
+                            "foodName": "火腿蛋餅",
+                            "imagePath": "",
+                            "quantity": 1,
+                            "additionalPrice": 40,
+                            "optionItems": [],
+                            "remark": ""
+                        }
+                    ]
+                },
+                {
+                    "comboId": "Mp5",
+                    "itemName": "副餐",
+                    "items": [
+                        {
+                            "foodId": "Mp534902",
+                            "foodName": "薯餅",
+                            "imagePath": "https://staging.cloudxurf.com.tw/upload/90367984/food2/Mp534902.png?v20250501124258",
+                            "quantity": 1,
+                            "additionalPrice": 0,
+                            "optionItems": [],
+                            "remark": ""
+                        }
+                    ]
+                },
+                {
+                    "comboId": "Mp7",
+                    "itemName": "飲料",
+                    "items": [
+                        {
+                            "foodId": "Mp734905",
+                            "foodName": "紅茶",
+                            "imagePath": "https://staging.cloudxurf.com.tw/upload/90367984/food2/Mp734905.png?v20250501124348",
+                            "quantity": 1,
+                            "additionalPrice": 0,
+                            "optionItems": [
+                                {
+                                    "foodId": "4a3872f9-a8cc-4a38-aefb-801a0a75267c",
+                                    "foodName": "大冰",
+                                    "imagePath": "",
+                                    "quantity": 1,
+                                    "additionalPrice": 10
+                                }
+                            ],
+                            "remark": ""
+                        }
+                    ]
+                }
+            ],
+            "CouponInfo": null,
+            "Memo": "",
+            "Taste": "",
+            "BatchID": "",
+            "Special": "",
+            "Special1": "",
+            "LegacyFoodName": "",
+            "Parent": "",
+            "Add": "",
+            "ChangePrice": false
+        }
+    ]
+}

@@ -21,15 +21,23 @@ BEGIN
 		DECLARE @OrderID VARCHAR(100) = (SELECT JSON_VALUE(@order, '$.ID')); 
 		IF @OrderID IS NULL 
 		BEGIN 
+           	SET @errorCode = 1; 
+			SET @message = 'OrderID錯誤!'; 
+			RETURN; 
+        END 
+ 
+		IF NOT EXISTS (SELECT 1 FROM P_OrdersTemp_Web WHERE EnterpriseID=@enterpriseId AND ID=@OrderID) 
+		BEGIN 
 			EXEC sp_CalculateOrderPreview_Add @enterpriseId,@shopId,@operator,@order,@items,@errorCode OUTPUT,@message OUTPUT; 
         END 
 		ELSE  
 		BEGIN 
-			EXEC sp_CalculateOrderPreview_Update @enterpriseId,@shopId,@operator,@order,@items,@errorCode OUTPUT,@message OUTPUT; 
-		END	 
- 
-		IF @errorCode = 1 
+			-- 更新線上訂單，當前流程沒有更新 
+			-- EXEC sp_CalculateOrderPreview_Update @enterpriseId,@shopId,@operator,@order,@items,@errorCode OUTPUT,@message OUTPUT; 
+           	SET @errorCode = 1; 
+			SET @message = '訂單已存在!'; 
 			RETURN; 
+		END	 
  
 		--優惠 > 待辦 
 		select '[ 
@@ -92,5 +100,6 @@ BEGIN
 	BEGIN CATCH 
 		SET @errorCode = 1; 
 		SET @message = N'計算訂單出現意外錯誤!'; 
+		SET @message += ': ' + ERROR_MESSAGE(); 
 	END CATCH 
 END
