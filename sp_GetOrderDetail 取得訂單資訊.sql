@@ -4,6 +4,133 @@ CREATE PROCEDURE [dbo].[sp_GetOrderDetail]
     @orderId NVARCHAR(50)   -- 訂單Id 
 AS 
 BEGIN 
+--    SET NOCOUNT ON; 
+-- 
+--    SELECT  
+--        '{ 
+--            "enterpriseId": "E12345", 
+--            "shopId": "S67890", 
+--						"shopName": "悅食坊1號店", 
+--            "memberNo": "M001", 
+--            "orderUId": "O98765", 
+--            "orderType": { 
+--                "type": "外帶", 
+--                "orderDateTime": "2025-03-04T12:00:00", 
+--                "tableNo": null, 
+--                "dineInCount": null, 
+--                "deliveryAddress": null, 
+--                "deliveryPhone": null, 
+--                "deliveryName": null 
+--            }, 
+--            "items": [ 
+--                { 
+--                    "uId": "F001", 
+--                    "foodId": "FD123", 
+--										"foodName": "個人套餐(外帶限定)", 
+--										"imagePath": "", 
+--                    "isGift": false, 
+--                    "originalPrice": 760.0, 
+--                    "quantity": 2, 
+--                    "price": 380.0, 
+--                    "discountAmount": 380.0, 
+--                    "itemCoupons": ["C001"], 
+--                    "comboItems": [ 
+--											{ 
+--												"comboId" : "AAA", 
+--										    "itemName": "個人套餐主餐", 
+--												"items": [ 
+--													{ 
+--															"foodId":"A01", 
+--															"foodName":"蕃茄海鮮義大利麵", 
+--															"imagePath":"", 
+--															"quantity":1, 
+--															"additionalPrice":0, 
+--															"optionItems":[ 
+--															{ 
+--																	"foodName":"微辣", 
+--																	"quantity":1, 
+--																	"additionalPrice":0 
+--																}, 
+--																{ 
+--																	"foodName":"加起司", 
+--																	"quantity":1, 
+--																	"additionalPrice":15 
+--																} 
+--															], 
+--															"remark":"測試備註" 
+--													} 
+--												] 
+--											}, 
+--											{ 
+--												"comboId" : "BBB", 
+--										    "itemName": "飲品", 
+--												"items": [ 
+--													{ 
+--															"foodId":"B01", 
+--															"foodName":"美式咖啡(冰/熱)", 
+--															"imagePath":"", 
+--															"quantity":1, 
+--															"additionalPrice":0, 
+--															"optionItems":[], 
+--															"remark":"少冰" 
+--													} 
+--												] 
+--											} 
+--										], 
+--                    "optionItems": [], 
+--                    "remark": "" 
+--                }, 
+--								{ 
+--                    "uId": "F001", 
+--                    "foodId": "FD456", 
+--										"foodName": "金色三麥經典大拼盤(肋排)", 
+--										"imagePath": "", 
+--                    "isGift": false, 
+--                    "originalPrice": 1250.0, 
+--                    "quantity": 1, 
+--                    "price": 1250.0, 
+--                    "discountAmount": 0.0, 
+--                    "itemCoupons": [], 
+--                    "comboItems": [], 
+--                    "optionItems": [ 
+--										{ 
+--												"foodId":"A0101", 
+--												"foodName":"微辣", 
+--												"imagePath":"", 
+--												"quantity":1, 
+--												"additionalPrice":0 
+--											} 
+--										], 
+--                    "remark": "" 
+--                } 
+--            ], 
+--            "orderCoupons": ["C002"], 
+--            "orderDiscountAmount": 20.0, 
+--            "paymentMethod": "信用卡", 
+--            "invoice": { 
+--                "invoiceType": "電子發票", 
+--                "taxId": "12345678", 
+--                "carrierNo": "/ABCD1234" 
+--            }, 
+--            "orderRemark": "無接觸取餐" 
+--        }' AS orderRequest,  -- 訂單資訊 
+-- 
+--        '{ 
+--            "orderStatus": "已完成", 
+--            "shortOrderCode": "A123", 
+--            "fullOrderCode": "ORD20250304001", 
+--            "qrCodeDescription": "請掃描QR Code取餐", 
+--						"orderDate" :  "' + CONVERT(VARCHAR, GETDATE(), 127) + '", 
+--						"pickupTime" : "13:10", 
+--            "paymentInfo": { 
+--								"paymentMethod" :"LINE PAY", 
+--                "paymentParams": { 
+--                    "orderId": "O98765", 
+--                    "amount": "90.0" 
+--                } 
+--            } 
+--        }' AS orderResult  -- 訂單結果 
+ 
 		SELECT  
 		    i.EnterpriseID, 
 		    i.SHOPID, 

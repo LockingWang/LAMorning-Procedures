@@ -1,6 +1,4 @@
- 
- 
-CREATE PROCEDURE [dbo].[sp_CalculateOrderPreview_Add]  
+CREATE OR ALTER PROCEDURE [dbo].[sp_CalculateOrderPreview_Add]  
 	@EnterpriseID VARCHAR(50),  
 	@ShopID VARCHAR(100), 
 	@Operator VARCHAR(100), 
@@ -120,7 +118,7 @@ BEGIN
 					VipAddrHead nvarchar (100) 
 				); 
  
-			INSERT INTO P_ItemsTemp_Web (EnterpriseID,OrderID,Operator,SHOPID,LastModify,ID,FoodID,MainID,KindID,Parent,[Add],[Count],Addcost,Total,FoodName, 
+			INSERT INTO P_ItemsTemp_Web (EnterpriseID,OrderID,Operator,SHOPID,LastModify,ID,FoodID,MainID,KindID,Parent,[Add],[Count],Price,Addcost,Total,FoodName, 
 				Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,Memo/*,LastModify*/,ChangePrice,BatchID,OrderIndex) 
 			OUTPUT INSERTED.* 
 			SELECT @EnterpriseID,@OrderID,@Operator,@ShopID,GETDATE(),* FROM OPENJSON(@ItemsJson) 
@@ -132,6 +130,7 @@ BEGIN
 				Parent VARCHAR(100), 
 				[Add] VARCHAR(300), 
 				[Count] FLOAT, 
+				Price FLOAT, 
 				AddCost FLOAT, 
 				Total FLOAT, 
 				FoodName VARCHAR(200), 
