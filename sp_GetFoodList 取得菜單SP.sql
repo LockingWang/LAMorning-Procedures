@@ -1,9 +1,10 @@
-CREATE   PROCEDURE sp_GetFoodList    
+CREATE OR ALTER PROCEDURE sp_GetFoodList    
     @enterpriseId NVARCHAR(50),    -- 企業ID    
     @shopId NVARCHAR(50),          -- 店鋪ID     
     @categoryId NVARCHAR(50),      -- 分類ID（目前未使用）    
     @orderType NVARCHAR(50),       -- 訂單類型（目前未使用）    
-    @langId NVARCHAR(50)           -- 語系ID    
+    @langId NVARCHAR(50),          -- 語系ID    
+    @foodId NVARCHAR(50) = NULL    -- 食品ID
 AS    
 BEGIN    
     SET NOCOUNT ON;    
@@ -127,6 +128,7 @@ FROM P_FoodMould_Shop FMS
     LEFT JOIN P_Data_Language_D LANGFOOD ON LANGFOOD.EnterpriseID = @enterpriseid AND LANGFOOD.SourceID = FM.ID AND LANGFOOD.TableName = 'Food'     
 WHERE FMS.EnterPriseID = @enterpriseId    
     AND FMS.ShopID = @shopId    
+    AND (@foodId IS NULL OR FM.ID = @foodId)
 ORDER BY FoodCategoryId, Sort;     
     END TRY     
     BEGIN CATCH     
