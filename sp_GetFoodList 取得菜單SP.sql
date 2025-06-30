@@ -6,6 +6,16 @@ CREATE OR ALTER PROCEDURE sp_GetFoodList
     @langId NVARCHAR(50),          -- 語系ID     
     @foodId NVARCHAR(50) = NULL    -- 食品ID 
 AS    
+
+-- 測試用    
+-- DECLARE @enterpriseId NVARCHAR(50) = '90367984'     -- 企業ID     
+-- DECLARE @shopId NVARCHAR(50) = 'A01'          -- 店鋪ID      
+-- DECLARE @categoryId NVARCHAR(50) = ''           -- 分類ID（目前未使用）     
+-- DECLARE @orderType NVARCHAR(50) = 'scaneDesk'       -- 訂單類型（目前未使用）     
+-- DECLARE @langId NVARCHAR(50) = 'TW'          -- 語系ID     
+-- DECLARE @foodId NVARCHAR(50) = NULL    -- 食品ID 
+
+
 BEGIN     
     SET NOCOUNT ON;     
      
@@ -25,7 +35,30 @@ SELECT
     ) AS ImagePath,     
     F.Introduce AS Description, -- 食品描述     
     CASE WHEN FM.YSFlag = 1 THEN 1 ELSE 0 END AS IsCombo,  -- 是否為套餐（YSFlag=1為套餐，0為單品）     
-    FM.price AS Price,           -- 價格     
+    FM.price AS Price,           -- 價格
+    -- 套餐升級清單（找出包含當前商品的套餐）
+    CASE 
+        WHEN FM.YSFlag = 0 THEN  -- 只有單品才需要找套餐
+            CONCAT('[', 
+                STUFF((
+                    SELECT DISTINCT
+                        ',{"FoodId":"' + CAST(PFM.ID AS NVARCHAR(50)) + '","FoodName":"' + ISNULL(JSON_VALUE(LANGPFM.Content, '$.' + @langId + '.Name'), PFM.Name) + '","Price":' + CAST(PFM.price AS NVARCHAR(20)) + '}'
+                    FROM P_FoodEnt_Mould PFEM
+                    JOIN P_FoodMould PFM ON PFM.EnterpriseID = @enterpriseId 
+                        AND PFM.MouldCode = PFEM.MouldCode 
+                        AND PFM.YSFlag = 1  -- 只找套餐
+                        AND PFM.ID = PFEM.MainFood
+                    LEFT JOIN P_Data_Language_D LANGPFM ON LANGPFM.EnterpriseID = @enterpriseId 
+                        AND LANGPFM.SourceID = PFM.ID 
+                        AND LANGPFM.TableName = 'Food'
+                    WHERE PFEM.EnterpriseID = @enterpriseId 
+                        AND PFEM.MouldCode = FMS.MouldCode 
+                        AND PFEM.EntFood = FM.ID  -- 找出包含當前商品的套餐
+                    FOR XML PATH('')
+                ), 1, 1, ''),
+            ']')
+        ELSE '[]'
+    END AS UpgradeList,     
     FM.Sn AS Sort,               -- 排序     
      
     -- 促銷活動清單（若有多個促銷，組成JSON陣列字串）     

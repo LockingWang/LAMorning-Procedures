@@ -1,14 +1,15 @@
-CREATE PROCEDURE [dbo].[sp_CalculateOrderPreview] 
+CREATE OR ALTER PROCEDURE [dbo].[sp_CalculateOrderPreview] 
     @enterpriseId NVARCHAR(50), -- 企業號Id 
     @shopId NVARCHAR(50), -- 門市Id 
-    --@langId NVARCHAR(50) = NULL, -- 語系Id 
-    --@memberNo NVARCHAR(50) = NULL, -- 會員No 
-    --@orderUId NVARCHAR(50), -- 訂單UId 
-    --@isMainOrder BIT, -- 是否為主單 
-    --@orderType NVARCHAR(MAX), -- 訂單類型 (JSON格式) 
+    @memberNo NVARCHAR(50) = NULL, -- 會員編號
+    @memberName NVARCHAR(50) = NULL, -- 會員名稱
 	@order NVARCHAR(MAX), 
     @items NVARCHAR(MAX), -- 餐點清單 (JSON格式) 
 	@operator varchar(100), 
+    --@langId NVARCHAR(50) = NULL, -- 語系Id 
+    --@orderUId NVARCHAR(50), -- 訂單UId 
+    --@isMainOrder BIT, -- 是否為主單 
+    --@orderType NVARCHAR(MAX), -- 訂單類型 (JSON格式) 
     --@orderCoupons NVARCHAR(MAX) = NULL, -- 整單優惠券清單 (JSON格式) 
     --@orderDiscountAmount DECIMAL(18, 2) = 0 -- 整單折扣金額 
 	@errorCode INT OUTPUT, 
@@ -28,7 +29,16 @@ BEGIN
  
 		IF NOT EXISTS (SELECT 1 FROM P_OrdersTemp_Web WHERE EnterpriseID=@enterpriseId AND ID=@OrderID) 
 		BEGIN 
-			EXEC sp_CalculateOrderPreview_Add @enterpriseId,@shopId,@operator,@order,@items,@errorCode OUTPUT,@message OUTPUT; 
+			EXEC sp_CalculateOrderPreview_Add 
+				@EnterpriseID = @enterpriseId,
+				@ShopID = @shopId,
+				@MemberNo = @memberNo,
+				@MemberName = @memberName,
+				@Operator = @operator,
+				@OrderJson = @order,
+				@ItemsJson = @items,
+				@errorCode = @errorCode OUTPUT,
+				@message = @message OUTPUT;
         END 
 		ELSE  
 		BEGIN 

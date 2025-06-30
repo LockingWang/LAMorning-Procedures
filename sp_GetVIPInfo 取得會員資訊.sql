@@ -1,23 +1,13 @@
-CREATE PROCEDURE [dbo].[sp_GetVIPInfo] 
+CREATE OR ALTER PROCEDURE [dbo].[sp_GetVIPInfo] 
     @enterpriseId NVARCHAR(50), -- 企業號Id 
     @memberNo NVARCHAR(50) -- 會員No 
 AS 
+
+-- DECLARE @enterpriseId NVARCHAR(50) = '企業號' -- 企業號Id 
+-- DECLARE @memberNo NVARCHAR(50) = '手機號碼' -- 會員No 
+
 BEGIN 
     SET NOCOUNT ON; 
-     
---    SELECT  
---        'Abby Li' AS MemberName, -- 會員名稱 
---        180 AS TotalPoints, -- 目前積點 
---        8 AS TotalCoupons, -- 目前已有優惠券 
---        '女' AS Gender, -- 性別 
---        '2023-01-06' AS Birthday, -- 出生年月日 
---        '+886 972255956' AS Phone, -- 手機號碼 
---        'cloudxurf@gmail.com' AS Email, -- 電子信箱 
---        '普通卡' AS MemberLevel, -- 會員等級 
---        '2023/11/30' AS ExpiredDate, -- 會員到期日 
---				'114 臺北市, 洲子街69 號' AS Address, -- 地址 
---        '{"Key":"S001","Value":"台北信義店"}' AS DefaultShop, -- 預設門市 
---        'A546742639' AS CardIDQRCode -- 會員QRCode編碼 
          
     SELECT DISTINCT  
 	    VIP_Info.CnName AS MemberName, 
@@ -30,7 +20,8 @@ BEGIN
 	    VIP_Info.Mobile AS Phone, 
 	    VIP_Info.Addr AS Address, 
 	    VIP_Info.Email AS Email, 
-	    O_Members.favEnterprise AS DefaultShop, 
+	    O_Members.favEnterprise AS defaultShopId,
+        (SELECT OrgName FROM S_Organ WHERE S_Organ.enterpriseId = @enterpriseId AND S_Organ.OrgCode = O_Members.favEnterprise) AS DefaultShop,
 	    (SELECT COUNT(*)  
 	     FROM VIP_TicketInfo  
 	     WHERE MemberNO = @MemberNO  
@@ -48,7 +39,8 @@ BEGIN
 	    AND VIP_CardInfo.EnterPriseID = VIP_CardType.EnterPriseID 
 	LEFT JOIN  
 	    O_Members  
-	    ON VIP_Info.MemberNO = O_Members.Account 
+	    ON VIP_Info.MemberNO = O_Members.Account
+        AND O_Members.EnterPriseID = @enterpriseId
 	WHERE  
 	    VIP_Info.MemberNO = @MemberNO  
 	    AND VIP_Info.EnterPriseID = @EnterpriseID   
