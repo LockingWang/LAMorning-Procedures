@@ -2,18 +2,18 @@ CREATE OR ALTER PROCEDURE sp_GetFoodList
     @enterpriseId NVARCHAR(50),    -- 企業ID      
     @shopId NVARCHAR(50),          -- 店鋪ID       
     @categoryId NVARCHAR(50),      -- 分類ID（目前未使用）      
-    @orderType NVARCHAR(50),       -- 訂單類型（目前未使用）      
+    @orderType NVARCHAR(50),       -- 訂單類型     
     @langId NVARCHAR(50),          -- 語系ID      
     @foodId NVARCHAR(50) = NULL    -- 食品ID  
 AS     
  
 -- 測試用     
 -- DECLARE @enterpriseId NVARCHAR(50) = '90367984'     -- 企業ID      
--- DECLARE @shopId NVARCHAR(50) = 'A01'          -- 店鋪ID       
--- DECLARE @categoryId NVARCHAR(50) = ''           -- 分類ID（目前未使用）      
--- DECLARE @orderType NVARCHAR(50) = 'scaneDesk'       -- 訂單類型（目前未使用）      
--- DECLARE @langId NVARCHAR(50) = 'TW'          -- 語系ID      
--- DECLARE @foodId NVARCHAR(50) = NULL    -- 食品ID  
+-- DECLARE @shopId NVARCHAR(50) = 'A01'                -- 店鋪ID       
+-- DECLARE @categoryId NVARCHAR(50) = ''               -- 分類ID（目前未使用）      
+-- DECLARE @orderType NVARCHAR(50) = 'scaneDesk'       -- 訂單類型   
+-- DECLARE @langId NVARCHAR(50) = 'TW'                 -- 語系ID      
+-- DECLARE @foodId NVARCHAR(50) = NULL                 -- 食品ID  
  
  
 BEGIN      
@@ -153,7 +153,7 @@ FROM P_FoodMould_Shop FMS
     -- 關聯菜單食品主檔（YSFlag=1為套餐，0為單品）      
     JOIN P_FoodMould FM ON FM.EnterPriseID = @enterpriseId AND FM.MouldCode = FMS.MouldCode AND (FM.stop = 0 OR FM.stop IS NULL) AND FM.Hide = 0 
     -- 關聯食品小分類      
-    JOIN P_FoodKind FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind      
+    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FMS.MouldCode AND FK.Hide = 0    
     -- 關聯食品資料      
     JOIN P_Food F ON F.EnterpriseID = @enterpriseId AND F.Kind = FM.Kind AND F.ID = FM.ID      
     -- 多語系：食品小分類      
