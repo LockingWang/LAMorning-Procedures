@@ -3,17 +3,18 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_GetVIPInfo]
     @memberNo NVARCHAR(50) -- 會員No 
 AS 
 
--- DECLARE @enterpriseId NVARCHAR(50) = '企業號' -- 企業號Id 
--- DECLARE @memberNo NVARCHAR(50) = '手機號碼' -- 會員No 
+-- DECLARE @enterpriseId NVARCHAR(50) = 'XF42792721' -- 企業號Id 
+-- DECLARE @memberNo NVARCHAR(50) = '0903008556' -- 會員No 
 
 BEGIN 
     SET NOCOUNT ON; 
          
-    SELECT DISTINCT  
+    SELECT DISTINCT   
 	    VIP_Info.CnName AS MemberName, 
 	    VIP_CardInfo.ExpiredDate AS ExpiredDate, 
 	    VIP_CardInfo.Points AS TotalPoints, 
-	    VIP_CardInfo.CardIDQRCode AS CardIDQRCode, 
+	    VIP_CardInfo.CardIDQRCode AS CardIDQRCode,
+        VIP_CardType.CardFacePhoto AS CardImageUrl,
 	    VIP_CardType.CardTypeName AS MemberLevel, 
 	    VIP_Info.Sex AS Gender, 
 	    VIP_Info.BirthDay AS Birthday, 
