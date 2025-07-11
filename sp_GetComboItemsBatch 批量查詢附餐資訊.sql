@@ -1,89 +1,84 @@
--- CREATE OR ALTER PROCEDURE [dbo].[sp_GetComboItemsBatch] 
---     @enterpriseId NVARCHAR(50), 
---     @shopId NVARCHAR(50), 
---     @foodIds NVARCHAR(MAX), 
---     @orderType NVARCHAR(50), 
---     @langId NVARCHAR(50) 
--- AS 
-
-DECLARE @enterpriseId NVARCHAR(50) = '90367984', 
-    @shopId NVARCHAR(50) = 'A01', 
-    @foodIds NVARCHAR(MAX) = 'Mp45931', 
-    @orderType NVARCHAR(50) = 'scaneDesk', 
-    @langId NVARCHAR(50) = 'TW';
-
-BEGIN 
-    SET NOCOUNT ON; 
-     
-    -- 將逗號分隔的 foodIds 轉換為表格 
-    DECLARE @FoodIdsTable TABLE (FoodId NVARCHAR(50)) 
-    INSERT INTO @FoodIdsTable 
-    SELECT value FROM STRING_SPLIT(@foodIds, ',') 
+CREATE OR ALTER PROCEDURE [dbo].[sp_GetComboItemsBatch]  
+    @enterpriseId NVARCHAR(50),  
+    @shopId NVARCHAR(50),  
+    @foodIds NVARCHAR(MAX),  
+    @orderType NVARCHAR(50),  
+    @langId NVARCHAR(50)  
+AS  
  
-    SELECT DISTINCT 
+-- DECLARE @enterpriseId NVARCHAR(50) = '90367984',  
+--     @shopId NVARCHAR(50) = 'A01',  
+--     @foodIds NVARCHAR(MAX) = 'Mp34699',  
+--     @orderType NVARCHAR(50) = 'scaneDesk',  
+--     @langId NVARCHAR(50) = 'TW'; 
+ 
+BEGIN  
+    SET NOCOUNT ON;  
+      
+    -- 將逗號分隔的 foodIds 轉換為表格  
+    DECLARE @FoodIdsTable TABLE (FoodId NVARCHAR(50))  
+    INSERT INTO @FoodIdsTable  
+    SELECT value FROM STRING_SPLIT(@foodIds, ',')  
+  
+    SELECT  
         F.FoodId, 
-        PDK.ID AS ItemId, 
-        ISNULL(JSON_VALUE(LANGKIND.Content, '$.' + @langId + '.Name'), PDK.Name) AS ItemName, 
-        ( 
-            SELECT DISTINCT 
+        PEK.KindID AS ItemId, 
+        ISNULL(JSON_VALUE(LANGKIND.Content, '$.' + @langId + '.Name'), PEK.KindName) AS ItemName,  
+        -- 取得附餐資訊 
+        (  
+            SELECT DISTINCT  
                 ENT.EntFood AS FoodId, 
-                ISNULL(SUF.Dir, '') AS ImagePath, 
-                ISNULL(JSON_VALUE(LANGFOOD.Content, '$.' + @langId + '.Name'), M.Name) AS FoodName, 
+                ISNULL(JSON_VALUE(LANGFOOD.Content, '$.' + @langId + '.Name'), PF.Name) AS FoodName, 
+                ISNULL(SUF.Dir, '') AS ImagePath,  
                 PF.Introduce AS Description, 
                 ENT.Price AS Price, 
                 ENT.EntNo AS Sort, 
-                CAST(CASE WHEN M.Stop = 0 THEN 1 ELSE 0 END AS BIT) AS IsSoldOut 
-            FROM P_FOODENT ENT 
-            JOIN P_FoodMould M 
-                ON ENT.EnterpriseID = M.EnterpriseID 
-                AND ENT.EntFood = M.ID 
-            JOIN P_Food PF 
+                ISNULL(PFMJ.Stop,0) AS IsSoldOut, 
+                CAST(CASE WHEN PF.Hide = 1 THEN 1 ELSE 0 END AS BIT) AS IsHidden, 
+                ENT.Auto AS IsAutoSelected, 
+                ENT.Def AS IsDefaultSelected 
+            FROM P_FoodEnt_Mould ENT 
+            JOIN P_FoodMould PF 
                 ON ENT.EnterpriseID = PF.EnterpriseID 
                 AND ENT.EntFood = PF.ID 
+                AND PF.MouldCode = fm.MouldCode 
+                AND PF.Kind = PEK.KindID
+                AND (PF.Stop = 0 OR PF.Stop IS NULL)
             LEFT JOIN S_UploadFile SUF 
                 ON ENT.EnterpriseID = SUF.EnterpriseID 
-                AND SUF.ItemID = ENT.EntFood 
-                AND SUF.vType = 'food2' 
-            LEFT JOIN P_Data_Language_D LANGFOOD 
-                ON LANGFOOD.EnterpriseID = @enterpriseid 
-                AND LANGFOOD.SourceID = M.ID 
-                AND LANGFOOD.TableName = 'Food' 
-            WHERE ENT.EnterpriseID = @enterpriseId 
+                AND SUF.ItemID = ENT.EntFood  
+                AND SUF.vType = 'food2'  
+            LEFT JOIN P_Data_Language_D LANGFOOD  
+                ON LANGFOOD.EnterpriseID = @enterpriseid  
+                AND LANGFOOD.SourceID = ENT.EntFood 
+                AND LANGFOOD.TableName = 'Food'
+            -- POS 商品售完 
+            LEFT JOIN P_FoodMouldJoin PFMJ on PFMJ.EnterpriseID = @enterpriseId and PFMJ.MouldCode = fm.MouldCode and PFMJ.FoodID = ENT.EntFood and PFMJ.ShopID = @shopId
+            WHERE ENT.EnterpriseID = @enterpriseId  
                 AND ENT.MainFood = F.FoodId 
-                AND M.Kind = PDK.ID 
-                AND ENT.EntFood IS NOT NULL 
-            ORDER BY ENT.EntNo 
-            FOR JSON PATH 
-        ) AS FoodItems, 
-        1 AS MinSelectCount, 
-        PEK.MaxCount AS MaxSelectCount, 
-        PEK.EntKindNo AS Sort 
+                AND ENT.MouldCode = fm.MouldCode 
+                AND ENT.EntFood IS NOT NULL  
+            ORDER BY ENT.EntNo  
+            FOR JSON PATH  
+        ) AS FoodItems,  
+        PEK.MaxCount AS MaxSelectCount,  
+        PEK.MinCount AS MinSelectCount,  
+        PEK.EntKindNo AS Sort  
     FROM @FoodIdsTable F 
-    JOIN P_FOODENT PENT ON PENT.EnterpriseID = @enterpriseId AND PENT.MainFood = F.FoodId 
-    JOIN P_FoodEntKind PEK ON PEK.EnterpriseID = @enterpriseId AND PENT.MainFood = PEK.FoodID 
-    JOIN P_FoodKind PDK ON PDK.EnterpriseID = @enterpriseId AND PEK.KindID = PDK.ID 
-    JOIN P_FOOD PD ON PD.EnterpriseID = @enterpriseId AND PENT.MainFood = PD.ID 
-    JOIN P_FoodMould FP ON FP.EnterpriseID = @enterpriseId AND PD.ID = FP.ID 
-    JOIN P_FoodMould_M fm ON fm.EnterpriseID = @enterpriseId AND FP.MouldCode = fm.MouldCode 
-    JOIN P_FoodMould_Shop fshop ON fshop.EnterpriseID = @enterpriseId AND fm.MouldCode = fshop.MouldCode 
-    JOIN P_FoodKind_Mould K1 
-        ON K1.EnterpriseID = @enterpriseId 
-        AND K1.MouldCode = fm.MouldCode 
-        AND k1.id = fp.kind 
-    JOIN p_foodkind2 K2 
-        ON K2.EnterpriseID = @enterpriseId 
-        AND K2.ID = FP.kind2 
-        AND k2.id = k1.FLevel 
+    -- 先透過 P_FoodMould_M 以及 P_FoodMould_Shop 確定要取的菜單 MouldCode 
+    JOIN P_FoodMould_M fm ON fm.EnterpriseID = @enterpriseId 
+        AND fm.[Status] = 9 
+        AND fm.MouldType = CASE @orderType        
+            WHEN 'takeout' THEN 2        
+            WHEN 'delivery' THEN 5         
+            WHEN 'scaneDesk' THEN 6        
+        END  
+    JOIN P_FoodMould_Shop fshop ON fshop.EnterpriseID = @enterpriseId AND fshop.ShopID = @shopId AND fm.MouldCode = fshop.MouldCode 
+    -- 取得*小類*的資訊與數量設定 
+    JOIN P_FoodEntKind_Mould PEK ON PEK.EnterpriseID = @enterpriseId AND PEK.MouldCode = fm.MouldCode AND PEK.FoodID = F.FoodId 
     LEFT JOIN P_Data_Language_D LANGKIND 
         ON LANGKIND.EnterpriseID = @enterpriseid 
-        AND LANGKIND.SourceID = PDK.ID 
-        AND LANGKIND.TableName = 'FoodKind' 
-    WHERE fshop.shopid = @shopId 
-        AND fm.status = 9 
-        AND fm.MouldType = CASE @orderType 
-            WHEN 'takeout' THEN 2 
-            WHEN 'delivery' THEN 5 
-            WHEN 'scaneDesk' THEN 6 
-        END 
-    ORDER BY F.FoodId, PEK.EntKindNo 
+        AND LANGKIND.SourceID = PEK.KindID 
+        AND LANGKIND.TableName = 'FoodKind'  
+    ORDER BY F.FoodId, PEK.EntKindNo  
 END
