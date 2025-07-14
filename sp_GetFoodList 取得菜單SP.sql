@@ -51,8 +51,7 @@ SELECT
                         AND PFM.Hide = 0  
                     JOIN P_FoodKind_Mould FKM ON FKM.EnterpriseID = @enterpriseId   
                         AND FKM.ID = PFM.Kind   
-                        AND FKM.MouldCode = PFEM.MouldCode   
-                        AND FKM.Hide = 0   
+                        AND FKM.MouldCode = PFEM.MouldCode 
                     LEFT JOIN P_Data_Language_D LANGPFM ON LANGPFM.EnterpriseID = @enterpriseId   
                         AND LANGPFM.SourceID = PFM.ID   
                         AND LANGPFM.TableName = 'Food'   
@@ -78,7 +77,7 @@ SELECT
                 ON aitem.EnterpriseID = @enterpriseId          
                 AND aitem.gid = ashop.MGID          
             JOIN P_Agio_FoodKind_Mould amould           
-                ON amould.EnterpriseID = @enterpriseId         
+                ON amould.EnterpriseID = @enterpriseId          
                 AND amould.MouldCode = aitem.gid          
         JOIN P_Agio_FoodMould afmould           
                 ON afmould.EnterpriseID = @enterpriseId          
@@ -156,8 +155,7 @@ FROM P_FoodMould_Shop FMS
         END 
     -- 關聯菜單食品主檔（過濾掉停售、隱藏商品）         
     JOIN P_FoodMould FM ON FM.EnterPriseID = @enterpriseId AND FM.MouldCode = FMS.MouldCode AND (FM.stop = 0 OR FM.stop IS NULL) AND FM.Hide = 0    
-    -- 關聯食品小分類 ( 過濾掉隱藏小分類 ) 
-    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FMM.MouldCode AND FK.Hide = 0       
+    -- 關聯食品小分類 ( 過濾掉隱藏小分類 )     JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FMM.MouldCode AND (FK.Hide = 0 or @foodId is not null)      
     -- 關聯食品資料 
     JOIN P_Food F ON F.EnterpriseID = @enterpriseId AND F.Kind = FM.Kind AND F.ID = FM.ID 
     -- 多語系：食品小分類 
