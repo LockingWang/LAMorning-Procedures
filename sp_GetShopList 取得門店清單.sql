@@ -37,10 +37,11 @@ BEGIN
 	        WHEN @userLat IS NOT NULL AND @userLng IS NOT NULL  
 	             AND @userLat <> 0 AND @userLng <> 0 
 	             AND store.google_lat IS NOT NULL AND store.google_lng IS NOT NULL  
-	             AND store.google_lat <> '' AND store.google_lng <> '' THEN    
-	            ROUND(6371 * ACOS(COS(RADIANS(@userLat)) * COS(RADIANS(store.google_lat)) * COS(RADIANS(store.google_lng) - RADIANS(@userLng)) + SIN(RADIANS(@userLat)) * SIN(RADIANS(store.google_lat))), 2)     
+	             AND store.google_lat <> '' AND store.google_lng <> ''
+	             AND ISNUMERIC(store.google_lat) = 1 AND ISNUMERIC(store.google_lng) = 1 THEN    
+	            ROUND(6371 * ACOS(COS(RADIANS(@userLat)) * COS(RADIANS(CAST(store.google_lat AS FLOAT))) * COS(RADIANS(CAST(store.google_lng AS FLOAT)) - RADIANS(@userLng)) + SIN(RADIANS(@userLat)) * SIN(RADIANS(CAST(store.google_lat AS FLOAT)))), 2)     
 	        ELSE     
-	            null -- 當用戶經緯度為NULL或0時，距離顯示為NULL    
+	            null -- 當無法計算距離時，距離顯示為NULL    
 	    END AS Distance -- 計算距離 (公里)    
 	FROM S_Organ store    
 	WHERE store.EnterPriseID = @enterpriseid    
