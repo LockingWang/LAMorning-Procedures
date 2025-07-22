@@ -1,4 +1,4 @@
-CREATE    PROCEDURE [dbo].[sp_GetFoodOptionsBatch]    
+CREATE OR ALTER PROCEDURE [dbo].[sp_GetFoodOptionsBatch]    
     @enterpriseId NVARCHAR(50),    
     @shopId NVARCHAR(50),    
     @foodIds NVARCHAR(MAX),    
@@ -6,11 +6,12 @@ CREATE    PROCEDURE [dbo].[sp_GetFoodOptionsBatch]
     @langId NVARCHAR(50)    
 AS    
    
+   
 -- DECLARE   
---     @enterpriseId NVARCHAR(50) = 'xurf',    
---     @shopId NVARCHAR(50) = 'A002',  
---     @foodIds NVARCHAR(MAX) = 'AH00146999',  
---     @orderType NVARCHAR(50) = 'scaneDesk',  
+--     @enterpriseId NVARCHAR(50) = 'XFenjoy',    
+--     @shopId NVARCHAR(50) = 'A02',  
+--     @foodIds NVARCHAR(MAX) = 'EN00132723',  
+--     @orderType NVARCHAR(50) = 'takeout', 
 --     @langId NVARCHAR(50) = 'TW'    
    
    
@@ -36,7 +37,8 @@ BEGIN
                 FA2.SN AS Sort,    
                 ISNULL(PFMJ.Stop,0) AS IsSoldOut, 
                 FA2.Lock 
-            FROM P_FoodAdd_Mould FA2   
+            FROM P_FoodAdd_Mould FA2
+            JOIN P_Food PF2 ON PF2.EnterPriseID = @enterpriseid AND PF2.ID = F.FoodId
             LEFT JOIN P_Data_Language_D LANGADD    
                 ON LANGADD.EnterpriseID = @enterpriseid    
                 AND LANGADD.SourceID = FA2.ID    
@@ -44,7 +46,7 @@ BEGIN
             LEFT JOIN P_FoodTasteAddMouldJoin PFMJ on PFMJ.EnterpriseID = @enterpriseId and PFMJ.TasteAddName = FA2.Name and PFMJ.ShopID = @shopId  
             WHERE FA2.AddKindID = FAK.ID    
             AND FA2.EnterpriseID = @enterpriseId    
-            AND FA2.Owner = F.FoodId    
+            AND (FA2.Owner = F.FoodId OR FA2.Owner = PF2.Kind)   
             AND FA2.MouldCode = FMM.MouldCode  
             ORDER BY FA2.SN    
             FOR JSON PATH    
@@ -62,12 +64,14 @@ BEGIN
             WHEN 'delivery' THEN 5         
             WHEN 'scaneDesk' THEN 6   
         END   
-    JOIN P_FoodAdd_Mould FAM ON FAM.EnterpriseID = @enterpriseId AND FAM.Owner = F.FoodId AND FAM.MouldCode = FMM.MouldCode  
+    JOIN P_FoodAdd_Mould FAM ON FAM.EnterpriseID = @enterpriseId AND FAM.MouldCode = FMM.MouldCode  
     JOIN P_FoodAddKind FAK ON FAK.ID = FAM.AddKindID  
+    JOIN P_Food PF ON PF.EnterPriseID = @enterpriseid AND PF.ID = F.FoodId
     -- 依據語系找出對應的顯示文字  
     LEFT JOIN P_Data_Language_D LANGKIND    
         ON LANGKIND.EnterpriseID = @enterpriseid    
         AND LANGKIND.SourceID = FAK.ID    
-        AND LANGKIND.TableName = 'FoodAddKind'    
+        AND LANGKIND.TableName = 'FoodAddKind'
+    WHERE (FAM.Owner = F.FoodId OR FAM.Owner = PF.Kind)
     GROUP BY F.FoodId, FAK.ID, FAK.Name, FAK.MaxCount, FAK.needed, LANGKIND.Content, FMM.MouldCode  
 END
