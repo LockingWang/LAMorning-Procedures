@@ -136,7 +136,9 @@ BEGIN
 			INSERT INTO P_ItemsTemp_Web (EnterpriseID,OrderID,Operator,SHOPID,LastModify,ID,FoodID,MainID,KindID,Parent,[Add],[Count],Price,Addcost,Total,FoodName,      
 				Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,Memo/*,LastModify*/,ChangePrice,BatchID,OrderIndex)      
 			OUTPUT INSERTED.*      
-			SELECT @EnterpriseID,@OrderID,@Operator,@ShopID,@now,* FROM OPENJSON(@ItemsJson)      
+			SELECT @EnterpriseID,@OrderID,@Operator,@ShopID,@now,ID,FoodID,MainID,KindID,Parent,[Add],[Count],Price,AddCost,Total,FoodName,      
+				ISNULL(Taste, '') AS Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,ISNULL(Memo, '') AS Memo,ChangePrice,BatchID,OrderIndex      
+			FROM OPENJSON(@ItemsJson)      
 			WITH (      
 				ID VARCHAR(100),       
 				FoodID VARCHAR(100),      
