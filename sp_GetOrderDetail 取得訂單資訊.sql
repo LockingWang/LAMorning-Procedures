@@ -117,6 +117,6 @@ BEGIN
 			WHERE      
 				coupon.EnterPriseID = @EnterPriseID AND          
 				coupon.orderID = @orderId     
-			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER, INCLUDE_NULL_VALUES    
+			FOR JSON PATH, INCLUDE_NULL_VALUES    
 		) AS coupons
 END 
