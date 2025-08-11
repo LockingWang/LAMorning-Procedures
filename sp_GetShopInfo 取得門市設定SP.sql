@@ -8,7 +8,7 @@ ALTER   PROCEDURE [dbo].[sp_GetShopInfo]
 AS   
   
 -- DECLARE @EnterpriseID VARCHAR(20) = '90367984',    
--- @ShopID VARCHAR(10) = 'A03'    
+-- @ShopID VARCHAR(10) = 'A01'    
   
 BEGIN    
     SET NOCOUNT ON;    
@@ -18,7 +18,8 @@ BEGIN
             CASE ASM.ModeID     
                 WHEN 'takeout' THEN 'takeoutSettings'    
                 WHEN 'delivery' THEN 'deliverySettings'    
-                WHEN 'scaneDesk' THEN 'dineInSettings'    
+                WHEN 'scaneDesk' THEN 'dineInSettings'
+                WHEN 'homeDelivery' THEN 'homeDeliverySettings'
             END AS SettingType,    
             ASD.Name AS Name,    
             CASE     
@@ -27,7 +28,7 @@ BEGIN
             END AS Value    
         FROM S_AppSetting_D ASD     
         JOIN S_AppSetting_M ASM ON ASM.GID = ASD.AppSetting_M_GID     
-            AND ASM.ModeID IN ('takeout', 'delivery', 'scaneDesk')     
+            AND ASM.ModeID IN ('takeout', 'delivery', 'scaneDesk', 'homeDelivery')     
         LEFT JOIN S_AppSetting_Shop ASS ON ASS.AppSetting_D_GID = ASD.GID     
             AND ASS.EnterpriseID = @EnterpriseID     
             AND ASS.ShopID = @ShopID    
@@ -112,7 +113,15 @@ BEGIN
                     FROM SettingsData    
                     WHERE SettingType = 'deliverySettings'    
                     FOR JSON PATH    
-                ) AS deliverySettings,    
+                ) AS deliverySettings,
+                (    
+                    SELECT    
+                        Name AS [key],    
+                        Value AS value    
+                    FROM SettingsData    
+                    WHERE SettingType = 'homeDeliverySettings'    
+                    FOR JSON PATH    
+                ) AS homeDeliverySettings, 
                 (    
                     SELECT *    
                     FROM DeskData    
