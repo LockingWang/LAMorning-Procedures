@@ -1,10 +1,14 @@
-CREATE OR ALTER PROCEDURE [dbo].[sp_GetShopInfo]    
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[sp_GetShopInfo]    
     @EnterpriseID VARCHAR(20),    
     @ShopID VARCHAR(10)    
 AS   
   
--- DECLARE @EnterpriseID VARCHAR(20) = 'XFlamorning',    
--- @ShopID VARCHAR(10) = '08Z01'    
+-- DECLARE @EnterpriseID VARCHAR(20) = '90367984',    
+-- @ShopID VARCHAR(10) = 'A03'    
   
 BEGIN    
     SET NOCOUNT ON;    
@@ -48,7 +52,9 @@ BEGIN
             OrgName AS shopName,    
             OrgCode AS shopID,    
             Addr AS shopAddress,    
-			Tel AS shopPhone    
+			Tel AS shopPhone,
+            google_lat AS shopLatitude,
+            google_lng AS shopLongitude
         FROM S_Organ    
         WHERE EnterpriseID = @EnterpriseID    
         AND OrgCode = @ShopID    
@@ -118,7 +124,9 @@ BEGIN
                         ShopName,    
                         ShopID,    
                         ShopAddress,    
-						ShopPhone    
+						ShopPhone,
+                        ShopLatitude,
+                        ShopLongitude   
                     FROM ShopData    
                     FOR JSON PATH, WITHOUT_ARRAY_WRAPPER    
                 )) AS shopInfo,    
@@ -139,3 +147,4 @@ BEGIN
             FOR JSON PATH, WITHOUT_ARRAY_WRAPPER    
         ) AS Result    
 END 
+GO
