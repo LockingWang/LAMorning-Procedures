@@ -1,4 +1,8 @@
-CREATE   PROCEDURE [dbo].[sp_GetVIPCouponsByShop]    
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[sp_GetVIPCouponsByShop]    
     @enterpriseId NVARCHAR(50), -- 企業號Id    
     @memberNo NVARCHAR(50) = NULL,     -- 會員No    
     @ShopId NVARCHAR(50)        -- 門市Id    
@@ -20,7 +24,7 @@ BEGIN
             WHEN 1 THEN '現金券'    
             WHEN 2 THEN '商品抵用券'    
             WHEN 3 THEN '商品折扣券'    
-            WHEN 4 THEN '現金折扣'    
+            WHEN 4 THEN '現金折扣券'    
             WHEN 5 THEN '整單折扣券'    
             WHEN 6 THEN '運費折讓券'    
             WHEN 7 THEN '商品兌換券'    
@@ -95,7 +99,7 @@ BEGIN
             WHEN 1 THEN '現金券'    
             WHEN 2 THEN '商品抵用券'    
             WHEN 3 THEN '商品折扣券'    
-            WHEN 4 THEN '現金折扣'    
+            WHEN 4 THEN '現金折扣券'    
             WHEN 5 THEN '整單折扣券'    
             WHEN 6 THEN '運費折讓券'    
             WHEN 7 THEN '商品兌換券'    
@@ -168,7 +172,7 @@ BEGIN
             WHEN 1 THEN '現金券'    
             WHEN 2 THEN '商品抵用券'    
             WHEN 3 THEN '商品折扣券'    
-            WHEN 4 THEN '現金折扣'    
+            WHEN 4 THEN '現金折扣券'    
             WHEN 5 THEN '整單折扣券'    
             WHEN 6 THEN '運費折讓券'    
             WHEN 7 THEN '商品兌換券'    
@@ -238,7 +242,7 @@ BEGIN
             WHEN 1 THEN '現金券'    
             WHEN 2 THEN '商品抵用券'    
             WHEN 3 THEN '商品折扣券'    
-            WHEN 4 THEN '現金折扣'    
+            WHEN 4 THEN '現金折扣券'    
             WHEN 5 THEN '整單折扣券'    
             WHEN 6 THEN '運費折讓券'    
             WHEN 7 THEN '商品兌換券'    
@@ -306,3 +310,4 @@ BEGIN
     ORDER BY vtt.TicketTypeName,iif(vtt.ValidType='2','9999-12-31',vti.TicketExpiredDate) 
     
 END
+GO
