@@ -1,4 +1,8 @@
-CREATE OR ALTER PROCEDURE [dbo].[sp_GetComboItemsBatch]    
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[sp_GetComboItemsBatch]    
     @enterpriseId NVARCHAR(50),    
     @shopId NVARCHAR(50),    
     @foodIds NVARCHAR(MAX),    
@@ -84,3 +88,4 @@ BEGIN
     LEFT JOIN  P_FoodKind PFK ON PFK.EnterpriseID = @enterpriseId AND PFK.ID = PEK.KindID
     ORDER BY F.FoodId, PEK.EntKindNo    
 END
+GO
