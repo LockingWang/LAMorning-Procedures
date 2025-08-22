@@ -5,19 +5,17 @@ GO
 ALTER   PROCEDURE [dbo].[sp_GetFoodList2]         
     @enterpriseId NVARCHAR(50),    -- 企業ID         
     @shopId NVARCHAR(50),          -- 店鋪ID          
-    @categoryId NVARCHAR(50),      -- 分類ID（目前未使用）         
-    @orderType NVARCHAR(50),       -- 訂單類型        
     @langId NVARCHAR(50),          -- 語系ID         
-    @foodId NVARCHAR(50) = NULL    -- 食品ID     
+    @foodId NVARCHAR(50) = NULL,   -- 食品ID     
+    @mouldCodes NVARCHAR(MAX)      -- 菜單代碼清單（逗號分隔）
 AS        
     
 -- 測試用        
 -- DECLARE @enterpriseId NVARCHAR(50) = 'xurf'     -- 企業ID         
 -- DECLARE @shopId NVARCHAR(50) = 'A001'                -- 店鋪ID          
--- DECLARE @categoryId NVARCHAR(50) = ''               -- 分類ID（目前未使用）         
--- DECLARE @orderType NVARCHAR(50) = 'scaneDesk'       -- 訂單類型      
 -- DECLARE @langId NVARCHAR(50) = 'TW'                 -- 語系ID         
 -- DECLARE @foodId NVARCHAR(50) = NULL                 -- 食品ID     
+-- DECLARE @mouldCodes NVARCHAR(MAX) = 'TimePeriodOnlineQRCode_20250430ARENTEST,TimePeriodOnlineQRCode_testTMM' -- 菜單代碼清單
     
     
 BEGIN         
@@ -25,27 +23,10 @@ BEGIN
          
     BEGIN TRY         
         
-        -- 宣告時段菜單變數
-        DECLARE @useTimeBasedMenu BIT = 0;
-        DECLARE @currentWeekDay INT;
-        DECLARE @currentTime TIME;
-        
-        -- 如果訂單類型是 scaneDesk，檢查是否需要使用時段菜單
-        IF @orderType = 'scaneDesk'
-        BEGIN
-            -- 取得當前星期和時間
-            SET @currentWeekDay = DATEPART(WEEKDAY, GETDATE());
-            SET @currentTime = CAST(GETDATE() AS TIME);
-            
-            -- 檢查是否使用時段菜單
-            SELECT @useTimeBasedMenu = CASE 
-                WHEN ParameterValue = 'true' THEN 1 
-                ELSE 0 
-            END
-            FROM S_Parameter_Enterprise 
-            WHERE EnterPriseID = @enterpriseId 
-                AND ParameterGID = '79dabbec-a224-4f34-a13e-04540c9d548e';
-        END
+        -- 將逗號分隔的 mouldCodes 轉換為表格    
+        DECLARE @MouldCodesTable TABLE (MouldCode NVARCHAR(50))    
+        INSERT INTO @MouldCodesTable    
+        SELECT value FROM STRING_SPLIT(@mouldCodes, ',')    
         
 SELECT         
     FM.Kind AS FoodCategoryId,  -- 食品分類ID         
@@ -79,10 +60,10 @@ SELECT
                         AND FKM.ID = PFM.Kind    
                         AND FKM.MouldCode = PFEM.MouldCode 
                     LEFT JOIN P_Data_Language_D LANGPFM ON LANGPFM.EnterpriseID = @enterpriseId   
-                        AND LANGPFM.SourceID = PFM.ID    
+                        AND LANGPFM.SourceID = PFM.ID
                         AND LANGPFM.TableName = 'Food'    
                     WHERE PFEM.EnterpriseID = @enterpriseId    
-                        AND PFEM.MouldCode = FMS.MouldCode    
+                        AND PFEM.MouldCode = FM.MouldCode    
                         AND PFEM.EntFood = FM.ID  -- 找出包含當前商品的套餐    
                     FOR XML PATH('')    
                 ), 1, 1, ''),    
@@ -169,42 +150,9 @@ SELECT
     ),''          
     ) AS PromotionBadge,              -- 優惠 Badge             
     ISNULL(PFMJ.Stop,0) AS IsSoldOut  
-FROM P_FoodMould_Shop FMS         
-    -- 關聯菜單主檔 - 根據是否使用時段菜單選擇不同的表
-    LEFT JOIN P_FoodMould_M FMM ON @useTimeBasedMenu = 0
-        AND FMM.EnterPriseID = @enterpriseId          
-        AND FMM.MouldCode = FMS.MouldCode          
-        AND FMM.[Status] = 9         
-        AND FMM.MouldType = CASE @orderType         
-            WHEN 'takeout' THEN 2
-            WHEN 'homeDelivery' THEN 3         
-            WHEN 'delivery' THEN 5          
-            WHEN 'scaneDesk' THEN 6          
-        END 
-    -- 如果使用時段菜單，則關聯 P_FoodMould_M_Time 表進行時間篩選
-    LEFT JOIN P_FoodMould_M_Time FMT ON @useTimeBasedMenu = 1 
-        AND FMT.EnterpriseID = @enterpriseId 
-        AND FMT.MouldCode = FMS.MouldCode
-        AND (
-            -- 檢查星期是否符合
-            (@currentWeekDay = 2 AND FMT.Week1 = 1) OR
-            (@currentWeekDay = 3 AND FMT.Week2 = 1) OR
-            (@currentWeekDay = 4 AND FMT.Week3 = 1) OR
-            (@currentWeekDay = 5 AND FMT.Week4 = 1) OR
-            (@currentWeekDay = 6 AND FMT.Week5 = 1) OR
-            (@currentWeekDay = 7 AND FMT.Week6 = 1) OR
-            (@currentWeekDay = 1 AND FMT.Week7 = 1)
-        )
-        AND (
-            -- 檢查時間是否符合任一時間區段
-            (@currentTime BETWEEN FMT.BeginTime1 AND FMT.EndTime1) OR
-            (@currentTime BETWEEN FMT.BeginTime2 AND FMT.EndTime2) OR
-            (@currentTime BETWEEN FMT.BeginTime3 AND FMT.EndTime3)
-        )
-    -- 關聯菜單食品主檔（過濾掉停售、隱藏商品）         
-    JOIN P_FoodMould FM ON FM.EnterPriseID = @enterpriseId AND FM.MouldCode = FMS.MouldCode AND (FM.stop = 0 OR FM.stop IS NULL) AND ISNULL(FM.Hide,0) = 0    
+FROM P_FoodMould FM         
     -- 關聯食品小分類 ( 過濾掉隱藏小分類 )     
-    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = COALESCE(FMM.MouldCode, FMT.MouldCode) AND (FK.Hide = 0 or @foodId is not null)      
+    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FM.MouldCode AND (FK.Hide = 0 or @foodId is not null)      
     -- 關聯食品資料 
     JOIN P_Food F ON F.EnterpriseID = @enterpriseId AND F.Kind = FM.Kind AND F.ID = FM.ID 
     -- 多語系：食品小分類 
@@ -213,9 +161,11 @@ FROM P_FoodMould_Shop FMS
     LEFT JOIN P_Data_Language_D LANGFOOD ON LANGFOOD.EnterpriseID = @enterpriseid AND LANGFOOD.SourceID = FM.ID AND LANGFOOD.TableName = 'Food'     
     -- 商品停售 
     LEFT JOIN P_FoodMouldJoin PFMJ on FM.EnterpriseID = PFMJ.EnterpriseID and FM.MouldCode = PFMJ.MouldCode and FM.ID = PFMJ.FoodID and PFMJ.ShopID = @shopId 
-WHERE FMS.EnterPriseID = @enterpriseId 
-    AND FMS.ShopID = @shopId     
+WHERE FM.EnterPriseID = @enterpriseId 
     AND (@foodId IS NULL OR FM.ID = @foodId)
+    AND (FM.stop = 0 OR FM.stop IS NULL) 
+    AND ISNULL(FM.Hide,0) = 0
+    AND FM.MouldCode IN (SELECT MouldCode FROM @MouldCodesTable)
 ORDER BY FoodCategoryId, Sort
 OPTION(RECOMPILE)
     END TRY          
