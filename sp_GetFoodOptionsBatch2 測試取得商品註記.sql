@@ -2,7 +2,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER   PROCEDURE [dbo].[sp_GetFoodOptionsBatch]      
+CREATE PROCEDURE [dbo].[sp_GetFoodOptionsBatch2]      
     @enterpriseId NVARCHAR(50),      
     @shopId NVARCHAR(50),      
     @foodIds NVARCHAR(MAX),      
@@ -11,10 +11,10 @@ ALTER   PROCEDURE [dbo].[sp_GetFoodOptionsBatch]
 AS        
   
 -- DECLARE      
---     @enterpriseId NVARCHAR(50) = 'XFenjoy',       
---     @shopId NVARCHAR(50) = 'A01',     
---     @foodIds NVARCHAR(MAX) = 'EN00132732',     
---     @orderType NVARCHAR(50) = 'takeout',    
+--     @enterpriseId NVARCHAR(50) = 'xurf',       
+--     @shopId NVARCHAR(50) = 'A001',     
+--     @foodIds NVARCHAR(MAX) = 'la0134036',     
+--     @orderType NVARCHAR(50) = 'scaneDesk',    
 --     @langId NVARCHAR(50) = 'TW'       
      
      
@@ -125,7 +125,8 @@ BEGIN
         AND FMM.MouldCode = FMS.MouldCode         
         AND FMM.[Status] = 9          
         AND FMM.MouldType = CASE @orderType          
-            WHEN 'takeout' THEN 2          
+            WHEN 'takeout' THEN 2
+            WHEN 'homeDelivery' THEN 3          
             WHEN 'delivery' THEN 5           
             WHEN 'scaneDesk' THEN 6     
         END     

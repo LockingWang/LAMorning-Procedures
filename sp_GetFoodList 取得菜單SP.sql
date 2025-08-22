@@ -216,8 +216,6 @@ FROM P_FoodMould_Shop FMS
 WHERE FMS.EnterPriseID = @enterpriseId 
     AND FMS.ShopID = @shopId     
     AND (@foodId IS NULL OR FM.ID = @foodId)
-    -- 確保至少有一個菜單主檔符合條件
-    AND (FMM.MouldCode IS NOT NULL OR FMT.MouldCode IS NOT NULL)
 ORDER BY FoodCategoryId, Sort
 OPTION(RECOMPILE)
     END TRY          

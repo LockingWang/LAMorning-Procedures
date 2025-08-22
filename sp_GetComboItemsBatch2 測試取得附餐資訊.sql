@@ -2,7 +2,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER   PROCEDURE [dbo].[sp_GetComboItemsBatch]    
+CREATE PROCEDURE [dbo].[sp_GetComboItemsBatch2]    
     @enterpriseId NVARCHAR(50),    
     @shopId NVARCHAR(50),    
     @foodIds NVARCHAR(MAX),    
@@ -10,9 +10,9 @@ ALTER   PROCEDURE [dbo].[sp_GetComboItemsBatch]
     @langId NVARCHAR(50)    
 AS    
    
--- DECLARE @enterpriseId NVARCHAR(50) = 'XFlamorning',    
---     @shopId NVARCHAR(50) = '08Z01',    
---     @foodIds NVARCHAR(MAX) = 'A5648910',    
+-- DECLARE @enterpriseId NVARCHAR(50) = 'xurf',    
+--     @shopId NVARCHAR(50) = 'A001',    
+--     @foodIds NVARCHAR(MAX) = 'la0134050',    
 --     @orderType NVARCHAR(50) = 'scaneDesk',    
 --     @langId NVARCHAR(50) = 'TW';   
    
@@ -100,7 +100,8 @@ BEGIN
         AND fm.[Status] = 9   
         AND fm.MouldCode = fshop.MouldCode
         AND fm.MouldType = CASE @orderType          
-            WHEN 'takeout' THEN 2          
+            WHEN 'takeout' THEN 2      
+            WHEN 'homeDelivery' THEN 3    
             WHEN 'delivery' THEN 5           
             WHEN 'scaneDesk' THEN 6          
         END    
