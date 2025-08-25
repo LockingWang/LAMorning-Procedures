@@ -45,7 +45,7 @@ BEGIN
          AND fm.[Status] = 9
          AND fm.MouldType = CASE @orderType
                                WHEN 'takeout' THEN 2
-                               WHEN 'homeDelivery' THEN 3
+                               WHEN 'homedelivery' THEN 3
                                WHEN 'delivery' THEN 5
                                WHEN 'scaneDesk' THEN 6
                              END;
@@ -59,7 +59,7 @@ BEGIN
          AND fmt.MouldCode = bm.MouldCode
          AND fmt.MouldType = CASE @orderType
                                WHEN 'takeout' THEN 2
-                               WHEN 'homeDelivery' THEN 3
+                               WHEN 'homedelivery' THEN 3
                                WHEN 'delivery' THEN 5
                                WHEN 'scaneDesk' THEN 6
                              END
