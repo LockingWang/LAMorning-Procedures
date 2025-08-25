@@ -19,7 +19,7 @@ BEGIN
                 WHEN 'takeout' THEN 'takeoutSettings'    
                 WHEN 'delivery' THEN 'deliverySettings'    
                 WHEN 'scaneDesk' THEN 'dineInSettings'
-                WHEN 'homeDelivery' THEN 'homeDeliverySettings'
+                WHEN 'homedelivery' THEN 'homeDeliverySettings'
             END AS SettingType,    
             ASD.Name AS Name,    
             CASE     
@@ -28,7 +28,7 @@ BEGIN
             END AS Value    
         FROM S_AppSetting_D ASD     
         JOIN S_AppSetting_M ASM ON ASM.GID = ASD.AppSetting_M_GID     
-            AND ASM.ModeID IN ('takeout', 'delivery', 'scaneDesk', 'homeDelivery')     
+            AND ASM.ModeID IN ('takeout', 'delivery', 'scaneDesk', 'homedelivery')     
         LEFT JOIN S_AppSetting_Shop ASS ON ASS.AppSetting_D_GID = ASD.GID     
             AND ASS.EnterpriseID = @EnterpriseID     
             AND ASS.ShopID = @ShopID    
