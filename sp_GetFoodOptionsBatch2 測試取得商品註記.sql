@@ -11,11 +11,11 @@ ALTER PROCEDURE [dbo].[sp_GetFoodOptionsBatch2]
 AS        
   
 -- DECLARE      
---     @enterpriseId NVARCHAR(50) = 'xurf',       
+--     @enterpriseId NVARCHAR(50) = 'xurf',     
 --     @shopId NVARCHAR(50) = 'A001',     
 --     @foodIds NVARCHAR(MAX) = 'la0134036',     
 --     @langId NVARCHAR(50) = 'TW',
---     @mouldCodes NVARCHAR(MAX) = 'MENU001,MENU002';       
+--     @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_06000';       
      
      
 BEGIN      
@@ -41,7 +41,7 @@ BEGIN
     JOIN P_Food PF ON PF.enterpriseID = @enterpriseId 
         AND PF.Kind = PFM.Kind 
         AND PF.ID = F.FoodId 
-        AND PF.NoKindAdd = '0'
+        AND PF.NoKindAdd = '0' -- 不列入類別註記 = 1，有列入 = 0
   
     SELECT      
         F.FoodId,    
@@ -78,11 +78,10 @@ BEGIN
     JOIN P_FoodAddKind FAK ON FAK.ID = FAM.AddKindID    
     -- 依據語系找出對應的顯示文字    
     LEFT JOIN P_Data_Language_D LANGKIND      
-        ON LANGKIND.EnterpriseID = @enterpriseid      
-        AND LANGKIND.SourceID = FAK.ID      
-        AND LANGKIND.TableName = 'FoodAddKind'  
+        ON LANGKIND.EnterpriseID = @enterpriseid
+        AND LANGKIND.SourceID = FAK.ID
+        AND LANGKIND.TableName = 'FoodAddKind'
     WHERE (FAM.Owner = F.FoodId OR FAM.[Owner] = F.FoodKind)
-        AND F.FoodKind IS NOT NULL  -- 只查詢已成功更新 FoodKind 的食品
     GROUP BY F.FoodId, F.FoodKind ,FAK.ID,FAK.SN, FAK.Name, FAK.MaxCount, FAK.needed, LANGKIND.Content
     order by FAK.SN
 END
