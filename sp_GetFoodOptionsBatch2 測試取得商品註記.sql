@@ -58,11 +58,12 @@ BEGIN
                 ISNULL(PFMJ.Stop,0) AS IsSoldOut,   
                 FA2.Lock   
             FROM P_FoodAdd_Mould FA2  
+            LEFT JOIN P_FoodAdd PFA ON PFA.EnterpriseID = @enterpriseId AND PFA.ID = FA2.ID
             LEFT JOIN P_Data_Language_D LANGADD      
                 ON LANGADD.EnterpriseID = @enterpriseid      
-                AND LANGADD.SourceID = FA2.ID      
+                AND LANGADD.SourceID = PFA.MGID      
                 AND LANGADD.TableName = 'FoodAdd'    
-            LEFT JOIN P_FoodTasteAddMouldJoin PFMJ on PFMJ.EnterpriseID = @enterpriseId and PFMJ.TasteAddName = FA2.Name and PFMJ.ShopID = @shopId    
+            LEFT JOIN P_FoodTasteAddMouldJoin PFMJ on PFMJ.EnterpriseID = @enterpriseId and PFMJ.TasteAddName = FA2.Name and PFMJ.ShopID = @shopId
             WHERE FA2.AddKindID = FAK.ID      
             AND FA2.EnterpriseID = @enterpriseId      
             AND (FA2.Owner = F.FoodId OR FA2.[Owner] = F.FoodKind) 
