@@ -10,11 +10,11 @@ ALTER PROCEDURE [dbo].[sp_GetComboItemsBatch2]
     @mouldCodes NVARCHAR(MAX)      -- 菜單代碼清單（逗號分隔）
 AS    
    
--- DECLARE @enterpriseId NVARCHAR(50) = 'xurf',    
---     @shopId NVARCHAR(50) = 'A001',    
---     @foodIds NVARCHAR(MAX) = 'la0134050',    
+-- DECLARE @enterpriseId NVARCHAR(50) = 'XFlamorning',    
+--     @shopId NVARCHAR(50) = '03F03',    
+--     @foodIds NVARCHAR(MAX) = 'A5648912',    
 --     @langId NVARCHAR(50) = 'TW',
---     @mouldCodes NVARCHAR(MAX) = 'MENU001,MENU002';   
+--     @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_A1140801';   
    
 BEGIN    
     SET NOCOUNT ON;    
@@ -38,7 +38,7 @@ BEGIN
             SELECT DISTINCT    
                 ENT.EntFood AS FoodId,   
                 ISNULL(JSON_VALUE(LANGFOOD.Content, '$.' + @langId + '.Name'), PF.Name) AS FoodName,   
-                ISNULL(SUF.Dir, '') AS ImagePath,    
+                ISNULL(SUF.Dir, '') AS ImagePath, 
                 PF.Introduce AS Description,   
                 ENT.Price AS Price,   
                 ENT.EntNo AS Sort,   
@@ -53,10 +53,14 @@ BEGIN
                 AND PF.MouldCode = ENT.MouldCode   
                 AND PF.Kind = PEK.KindID  
                 AND (PF.Stop = 0 OR PF.Stop IS NULL)  
-            LEFT JOIN S_UploadFile SUF   
-                ON ENT.EnterpriseID = SUF.EnterpriseID   
-                AND SUF.ItemID = ENT.EntFood    
-                AND SUF.vType = 'food2'    
+            OUTER APPLY (
+                SELECT TOP 1 SUF.Dir
+                FROM S_UploadFile SUF
+                WHERE SUF.EnterpriseID = ENT.EnterpriseID
+                AND SUF.ItemID = ENT.EntFood
+                AND SUF.vType = 'food2'
+                ORDER BY SUF.LastModify DESC
+            ) SUF
             LEFT JOIN P_Data_Language_D LANGFOOD    
                 ON LANGFOOD.EnterpriseID = @enterpriseid    
                 AND LANGFOOD.SourceID = ENT.EntFood   
