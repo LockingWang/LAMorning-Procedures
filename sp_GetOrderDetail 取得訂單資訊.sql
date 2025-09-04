@@ -20,7 +20,7 @@ BEGIN
 	SET NOCOUNT ON;     
      
 	-- 參數驗證     
-	IF @EnterPriseID IS NULL OR @ShopID IS NULL OR @orderId IS NULL     
+	IF @EnterPriseID IS NULL /*OR @ShopID IS NULL*/ OR @orderId IS NULL     -- 因為直接進會員專區不會帶入門店，所以不會有門店參數
 	BEGIN     
 		RAISERROR(N'缺少必要參數：EnterpriseID、ShopID 或 orderId 不能為空', 16, 1)     
 		RETURN     
@@ -76,7 +76,7 @@ BEGIN
 			SELECT      
 				i.ID,
                 i.FoodID,
-                i.MainID,
+                ISNULL(i.MainID,'') MainID,
                 i.KindID,
                 i.Parent,
                 i.[Add],
@@ -113,7 +113,7 @@ BEGIN
 			WHERE o.EnterPriseID = @EnterPriseID AND o.OrgCode = orders.ShopID  
 			FOR JSON PATH, INCLUDE_NULL_VALUES   
 		) AS shopInfo,
-        (     
+        ISNULL((     
 			SELECT      
 				coupon.ItemID AS targetItemID,
                 coupon.ReasonName AS couponName,
@@ -127,7 +127,7 @@ BEGIN
 				coupon.EnterPriseID = @EnterPriseID AND          
 				coupon.orderID = @orderId     
 			FOR JSON PATH, INCLUDE_NULL_VALUES    
-		) AS coupons
+		),'[]') AS coupons
     UNION
     --POS訂單紀錄用
     	SELECT     
@@ -179,7 +179,7 @@ BEGIN
 			SELECT      
 				i.ID,
                 i.FoodID,
-                i.MainID,
+                ISNULL(i.MainID,'') MainID,
                 i.KindID,
                 i.Parent,
                 i.[Add],
@@ -216,6 +216,7 @@ BEGIN
 			WHERE o.EnterPriseID = @EnterPriseID AND o.OrgCode = orders.ShopID  
 			FOR JSON PATH, INCLUDE_NULL_VALUES   
 		) AS shopInfo,
+        ISNULL (
         (     
 			SELECT      
 				coupon.ItemID AS targetItemID,
@@ -230,7 +231,7 @@ BEGIN
 				coupon.EnterPriseID = @EnterPriseID AND          
 				coupon.orderID = @orderId     
 			FOR JSON PATH, INCLUDE_NULL_VALUES    
-		) AS coupons
+		),'[]') AS coupons
         ) a where [order] is not null -- 避免線上訂單無資料，導致前端無法正常顯示
 END 
 GO
