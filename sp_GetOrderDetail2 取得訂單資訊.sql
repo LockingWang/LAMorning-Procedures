@@ -87,7 +87,13 @@ BEGIN
                             CASE 
                                 WHEN LANGADD.Content IS NOT NULL THEN 
                                     JSON_VALUE(LANGADD.Content, '$.' + @langId + '.Name') + 
-                                    SUBSTRING(addItem, CHARINDEX('x', addItem), LEN(addItem))
+                                    SUBSTRING(addItem, 
+                                        CASE 
+                                            WHEN CHARINDEX('x', addItem) > 0 
+                                            THEN CHARINDEX('x', addItem) 
+                                            ELSE LEN(addItem) + 1 
+                                        END, 
+                                        LEN(addItem))
                                 ELSE addItem
                             END, 
                             ','
@@ -97,7 +103,12 @@ BEGIN
                             FROM STRING_SPLIT(i.[Add], ',')
                         ) splitItems
                         LEFT JOIN P_FoodAdd FA ON FA.EnterpriseID = @EnterPriseID 
-                            AND FA.Name = TRIM(SUBSTRING(splitItems.addItem, 1, CHARINDEX('x', splitItems.addItem) - 1))
+                            AND FA.Name = TRIM(SUBSTRING(splitItems.addItem, 1, 
+                                CASE 
+                                    WHEN CHARINDEX('x', splitItems.addItem) > 0 
+                                    THEN CHARINDEX('x', splitItems.addItem) - 1 
+                                    ELSE LEN(splitItems.addItem) 
+                                END))
                             AND FA.[Owner] IS NULL
                         LEFT JOIN P_Data_Language_D LANGADD ON LANGADD.EnterpriseID = @EnterPriseID 
                             AND LANGADD.SourceID = FA.ID
@@ -218,7 +229,13 @@ BEGIN
                             CASE 
                                 WHEN LANGADD.Content IS NOT NULL THEN 
                                     JSON_VALUE(LANGADD.Content, '$.' + @langId + '.Name') + 
-                                    SUBSTRING(addItem, CHARINDEX('x', addItem), LEN(addItem))
+                                    SUBSTRING(addItem, 
+                                        CASE 
+                                            WHEN CHARINDEX('x', addItem) > 0 
+                                            THEN CHARINDEX('x', addItem) 
+                                            ELSE LEN(addItem) + 1 
+                                        END, 
+                                        LEN(addItem))
                                 ELSE addItem
                             END, 
                             ','
@@ -228,7 +245,12 @@ BEGIN
                             FROM STRING_SPLIT(i.[Add], ',')
                         ) splitItems
                         LEFT JOIN P_FoodAdd FA ON FA.EnterpriseID = @EnterPriseID 
-                            AND FA.Name = TRIM(SUBSTRING(splitItems.addItem, 1, CHARINDEX('x', splitItems.addItem) - 1))
+                            AND FA.Name = TRIM(SUBSTRING(splitItems.addItem, 1, 
+                                CASE 
+                                    WHEN CHARINDEX('x', splitItems.addItem) > 0 
+                                    THEN CHARINDEX('x', splitItems.addItem) - 1 
+                                    ELSE LEN(splitItems.addItem) 
+                                END))
                             AND FA.[Owner] IS NULL
                         LEFT JOIN P_Data_Language_D LANGADD ON LANGADD.EnterpriseID = @EnterPriseID 
                             AND LANGADD.SourceID = FA.ID 
