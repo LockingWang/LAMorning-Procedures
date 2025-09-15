@@ -1,3 +1,4 @@
+-- 查企業
 SELECT * FROM S_FileConversionLOG
 WHERE EnterpriseID = 'XFenjoy'
 AND ShopID = '0903008556' -- 手機號碼

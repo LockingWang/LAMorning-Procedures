@@ -3,12 +3,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 ALTER   PROCEDURE [dbo].[sp_GetShopInfo]    
-    @EnterpriseID VARCHAR(20),    
-    @ShopID VARCHAR(10)    
+    @EnterpriseID VARCHAR(100),    
+    @ShopID VARCHAR(100)    
 AS   
   
--- DECLARE @EnterpriseID VARCHAR(20) = '90367984',    
--- @ShopID VARCHAR(10) = 'A01'    
+-- DECLARE @EnterpriseID VARCHAR(100) = 'XF85122145',    
+-- @ShopID VARCHAR(100) = '5starlimitpotTEST'
   
 BEGIN    
     SET NOCOUNT ON;    
