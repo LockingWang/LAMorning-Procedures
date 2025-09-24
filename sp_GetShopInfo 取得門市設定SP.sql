@@ -31,7 +31,7 @@ BEGIN
             AND ASM.ModeID IN ('takeout', 'delivery', 'scaneDesk', 'homedelivery')     
         LEFT JOIN S_AppSetting_Shop ASS ON ASS.AppSetting_D_GID = ASD.GID     
             AND ASS.EnterpriseID = @EnterpriseID     
-            AND ASS.ShopID = @ShopID    
+            AND ASS.ShopID = @ShopID
     ),    
     BannerData AS (    
         SELECT TOP 1 Dir AS bannerImagePath    

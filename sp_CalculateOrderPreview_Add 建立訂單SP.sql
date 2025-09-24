@@ -69,7 +69,7 @@ BEGIN
 				MeTime,VIPTel,AgioDiscount,AgioCost,AgioPercent,CardID,WechatOpenID,OrderFoodCount,PayStatus,      
 				VipAddr,OrderType,AppFunGID,ReceiverName,ReceiverMark,TakeWayTime/*,ReceiptTime*/,firmServiceFee,deliverFee,      
 				packageFee,activityShopPart,activityTotal,activityFirmPart,PayChannel,BillType,TakeWayTime2,      
-				ReceiptOP,TakeWayOP2,CarrierId,PrintStatus,VipAddrHead,DonateCode)      
+				ReceiptOP,TakeWayOP2,CarrierId,PrintStatus,VipAddrHead,DonateCode,SubmitTimes)      
 			OUTPUT INSERTED.*      
 			select @EnterpriseID,@ShopID,@Operator,0,@EnterpriseID + MeTime + @SerialNum,@now,ID,DeskID,Machine,VendNo,SaleTime,Man,Woman,Child,Baby,      
 				Total,PayTotal,ServicePercent,ServiceTotal,TendTotal,InvoiceTotal,@MemberNo,@MemberName,SaleType,      
@@ -78,7 +78,7 @@ BEGIN
 				packageFee,activityShopPart,activityTotal,activityFirmPart,    
 				CASE WHEN PayChannel = 'JkoPayWeb' THEN 'JkoPay_web' ELSE PayChannel END,      
 				BillType,TakeWayTime2,      
-				ReceiptOP,TakeWayOP2,CarrierId,PrintStatus,VipAddrHead,DonateCode FROM OPENJSON(@OrderJson)      
+				ReceiptOP,TakeWayOP2,CarrierId,PrintStatus,VipAddrHead,DonateCode,1 FROM OPENJSON(@OrderJson)      
 			WITH (      
 				ID varchar (100) ,      
 				DeskID varchar (100) ,      
@@ -137,7 +137,7 @@ BEGIN
 				Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,Memo/*,LastModify*/,ChangePrice,BatchID,OrderIndex)      
 			OUTPUT INSERTED.*      
 			SELECT @EnterpriseID,@OrderID,@Operator,@ShopID,@now,ID,FoodID,MainID,KindID,Parent,[Add],[Count],Price,AddCost,Total,FoodName,      
-				ISNULL(Taste, '') AS Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,ISNULL(Memo, '') AS Memo,ChangePrice,BatchID,OrderIndex      
+				ISNULL(Taste, '') AS Taste,InputTime,ServCost,Discount,TotalDiscount,Special,Special1,ISNULL(Memo, '') AS Memo,ChangePrice,BatchID,1 * 10000 + OrderIndex      
 			FROM OPENJSON(@ItemsJson)      
 			WITH (      
 				ID VARCHAR(100),       
