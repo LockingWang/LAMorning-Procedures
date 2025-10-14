@@ -5,7 +5,7 @@ GO
 ALTER   PROCEDURE [dbo].[sp_GetFoodList]         
     @enterpriseId NVARCHAR(50),    -- 企業ID         
     @shopId NVARCHAR(50),          -- 店鋪ID          
-    @langId NVARCHAR(50),          -- 語系ID         
+    @langId NVARCHAR(50) = 'TW',   -- 語系ID         
     @foodId NVARCHAR(50) = NULL,   -- 食品ID     
     @mouldCodes NVARCHAR(MAX)      -- 菜單代碼清單（逗號分隔）
 AS        
@@ -15,7 +15,7 @@ AS
 -- DECLARE @shopId NVARCHAR(50) = 'A001'                -- 店鋪ID          
 -- DECLARE @langId NVARCHAR(50) = 'TW'                 -- 語系ID         
 -- DECLARE @foodId NVARCHAR(50) = NULL                 -- 食品ID     
--- DECLARE @mouldCodes NVARCHAR(MAX) = 'TimePeriodOnlineQRCode_20250430ARENTEST,TimePeriodOnlineQRCode_testTMM' -- 菜單代碼清單
+-- DECLARE @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_06000' -- 菜單代碼清單
     
     
 BEGIN         
@@ -30,19 +30,21 @@ BEGIN
         
 SELECT         
     FM.Kind AS FoodCategoryId,  -- 食品分類ID         
-    ISNULL(JSON_VALUE(LANGKIND.Content, '$.' + @langId + '.Name'), FK.Name) AS FoodCategoryName,  -- 食品分類名稱（多語系）        
+    ISNULL(JSON_VALUE(LANGKIND.Content, '$.' + @langId + '.Name'), FK.Name) AS FoodCategoryName,  -- 食品分類名稱（多語系）
     FK.Sn AS FoodCategorySort,  -- 食品分類排序         
     FM.ID AS FoodId,            -- 食品ID         
     ISNULL(JSON_VALUE(LANGFOOD.Content, '$.' + @langId + '.Name'), FM.Name) AS FoodName,          -- 食品名稱（多語系）          
-    (          
-        -- 取食品圖片路徑（僅取一筆）         
+    FM.Name AS OriginFoodName, -- 食品原始名稱
+    FM.stop AS [Stop], -- 販售狀態
+    (                   
         SELECT TOP 1 Dir          
         FROM S_UploadFile UF          
         WHERE UF.enterpriseid = @enterpriseId AND UF.itemid = FM.ID          
-    ) AS ImagePath,         
+    ) AS ImagePath,  -- 取食品圖片路徑（僅取一筆）    
     F.Introduce AS Description, -- 食品描述         
     CASE WHEN FM.YSFlag = 1 THEN 1 ELSE 0 END AS IsCombo,  -- 是否為套餐（YSFlag=1為套餐，0為單品）         
-    FM.price AS Price,           -- 價格    
+    FM.price AS Price,  -- 價格
+
     -- 套餐升級清單（找出包含當前商品的套餐）    
     CASE     
         WHEN FM.YSFlag = 0 THEN  -- 只有單品才需要找套餐    
@@ -149,7 +151,7 @@ SELECT
             AND afmould.id = FM.id          
     ),''          
     ) AS PromotionBadge,              -- 優惠 Badge             
-    ISNULL(PFMJ.Stop,0) AS IsSoldOut  
+    ISNULL(PFMJ.Stop,0) AS IsSoldOut  -- POS 停售
 FROM P_FoodMould FM         
     -- 關聯食品小分類 ( 過濾掉隱藏小分類 )     
     JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FM.MouldCode AND (FK.Hide = 0 or @foodId is not null)      
@@ -163,8 +165,7 @@ FROM P_FoodMould FM
     LEFT JOIN P_FoodMouldJoin PFMJ on FM.EnterpriseID = PFMJ.EnterpriseID and FM.MouldCode = PFMJ.MouldCode and FM.ID = PFMJ.FoodID and PFMJ.ShopID = @shopId 
 WHERE FM.EnterPriseID = @enterpriseId 
     AND (@foodId IS NULL OR FM.ID = @foodId)
-    AND (FM.stop = 0 OR FM.stop IS NULL) 
-    AND ISNULL(FM.Hide,0) = 0
+    AND (FM.Hide IS NULL OR FM.Hide = 0) -- 非隱藏的餐點
     AND FM.MouldCode IN (SELECT MouldCode FROM @MouldCodesTable)
 ORDER BY FoodCategoryId, Sort
 OPTION(RECOMPILE)
