@@ -37,12 +37,13 @@ BEGIN
 	     WHERE ps.ParameterName = 'AppSMSDayTimes') AS AppSMSDayTimes,
 	     
 	    -- 取得AppSMSIntervalMin參數
-	    (SELECT ISNULL(pe.ParameterValue, ps.ParameterValue) AS AppSMSIntervalMin
+	    (SELECT ISNULL(pe.ParameterValue, ps.ParameterValue)
 	     FROM S_Parameter_System ps
 	     LEFT JOIN S_Parameter_Enterprise pe
 	         ON pe.ParameterGID = ps.GID
 	         AND pe.EnterPriseID = @enterpriseId
-	     WHERE ps.ParameterName = 'AppSMSIntervalMin') AS AppSMSIntervalMin 
+	     WHERE ps.ParameterName = 'AppSMSIntervalMin') AS AppSMSIntervalMin
+        
 	FROM System_Enterprise se 
 	LEFT JOIN T_SystemSetting ts ON ts.EnterpriseID = @enterpriseId AND ts.OrgCode = @enterpriseId
 	LEFT JOIN S_Organ so on so.EnterPriseID=@enterpriseId and so.OrgType=5 and so.OrgCode=@enterpriseId -- 企業名稱改為抓S_Organ避免修改後顯示錯誤
