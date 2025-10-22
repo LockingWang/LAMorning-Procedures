@@ -7,7 +7,8 @@ ALTER   PROCEDURE [dbo].[sp_GetFoodList]
     @shopId NVARCHAR(50),          -- 店鋪ID          
     @langId NVARCHAR(50) = 'TW',   -- 語系ID         
     @foodId NVARCHAR(50) = NULL,   -- 食品ID     
-    @mouldCodes NVARCHAR(MAX)      -- 菜單代碼清單（逗號分隔）
+    @mouldCodes NVARCHAR(MAX),     -- 菜單代碼清單（逗號分隔）
+    @showHidenKind BIT = 0          -- 是否顯示隱藏分類（預設為false）
 AS        
     
 -- 測試用        
@@ -16,6 +17,7 @@ AS
 -- DECLARE @langId NVARCHAR(50) = 'TW'                 -- 語系ID         
 -- DECLARE @foodId NVARCHAR(50) = NULL                 -- 食品ID     
 -- DECLARE @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_06000' -- 菜單代碼清單
+-- DECLARE @showHidenKind BIT = 0                      -- 是否顯示隱藏分類
     
     
 BEGIN         
@@ -153,8 +155,8 @@ SELECT
     ) AS PromotionBadge,              -- 優惠 Badge             
     ISNULL(PFMJ.Stop,0) AS IsSoldOut  -- POS 停售
 FROM P_FoodMould FM         
-    -- 關聯食品小分類 ( 過濾掉隱藏小分類 )     
-    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FM.MouldCode AND (FK.Hide = 0 or @foodId is not null)      
+    -- 關聯食品小分類 ( 根據 @showHidenKind 參數決定是否過濾隱藏小分類 )     
+    JOIN P_FoodKind_Mould FK ON FK.EnterpriseID = @enterpriseId AND FK.ID = FM.Kind AND FK.MouldCode = FM.MouldCode AND (@showHidenKind = 1 OR FK.Hide = 0 OR @foodId is not null)   -- @showHidenKind=1 時不過濾隱藏分類   
     -- 關聯食品資料 
     JOIN P_Food F ON F.EnterpriseID = @enterpriseId AND F.Kind = FM.Kind AND F.ID = FM.ID 
     -- 多語系：食品小分類 

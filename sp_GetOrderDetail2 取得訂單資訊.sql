@@ -286,7 +286,7 @@ BEGIN
 			SELECT    
 				o.EnterPriseID,   
 				o.OrgCode AS ShopID,   
-				o.OrgName AS ShopName,   
+				o.OrgName AS ShopName,    
 				o.Tel AS ShopTel,   
 				o.Addr AS ShopAddress   
 			FROM S_Organ o  
