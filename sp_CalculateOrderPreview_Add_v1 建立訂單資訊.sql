@@ -88,7 +88,7 @@ BEGIN
 			WITH (ID VARCHAR(100), FoodID VARCHAR(100), MainID VARCHAR(100), KindID VARCHAR(100), Parent VARCHAR(100), [Add] VARCHAR(300), [Count] FLOAT, Price FLOAT, AddCost FLOAT, Total FLOAT, FoodName VARCHAR(200),      
 				Taste VARCHAR(300), InputTime DATETIME, ServCost BIT, Discount BIT, TotalDiscount BIT, Special VARCHAR(100), Special1 VARCHAR(100), Memo VARCHAR(100), ChangePrice BIT, BatchID VARCHAR(100), OrderIndex INT);      
   
-			-- 優惠券處理，統一欄位順序，避免 SELECT *
+			-- [方案A] INSERT 優惠券資料
 			IF @CouponsJson IS NOT NULL  
 			BEGIN  
 				INSERT INTO P_AgioTemp_Web (
@@ -107,7 +107,8 @@ BEGIN
 					AgioCost,
 					ReasonID,
 					ReasonName,
-					AgioType
+					AgioType,
+					ItemName
 				)
 				SELECT
 					@EnterpriseID,
@@ -125,7 +126,8 @@ BEGIN
 					AgioCost,
 					ReasonID,
 					ReasonName,
-					AgioType
+					AgioType,
+					ItemName
 				FROM OPENJSON(@CouponsJson)
 				WITH (
 					ID VARCHAR(100),
@@ -137,7 +139,8 @@ BEGIN
 					AgioCost FLOAT,
 					ReasonID VARCHAR(40),
 					ReasonName NVARCHAR(100),
-					AgioType VARCHAR(50)
+					AgioType VARCHAR(50),
+					ItemName NVARCHAR(400)
 				);
 			END
 
