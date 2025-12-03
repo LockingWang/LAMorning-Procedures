@@ -88,62 +88,58 @@ BEGIN
 			WITH (ID VARCHAR(100), FoodID VARCHAR(100), MainID VARCHAR(100), KindID VARCHAR(100), Parent VARCHAR(100), [Add] VARCHAR(300), [Count] FLOAT, Price FLOAT, AddCost FLOAT, Total FLOAT, FoodName VARCHAR(200),      
 				Taste VARCHAR(300), InputTime DATETIME, ServCost BIT, Discount BIT, TotalDiscount BIT, Special VARCHAR(100), Special1 VARCHAR(100), Memo VARCHAR(100), ChangePrice BIT, BatchID VARCHAR(100), OrderIndex INT);      
   
-			-- [方案A] INSERT 優惠券資料（含 ItemName）
-IF @CouponsJson IS NOT NULL  
-BEGIN  
-	INSERT INTO P_AgioTemp_Web (
-		EnterpriseID,
-        ShopID,
-        OrderID,
-        WorkDate,
-        WorkTime,
-        LastModify,
-        ID,
-        ItemID,
-        [Owner],
-        AgioReason,
-        AgioPercent,
-        AgioTotal,
-        AgioCost,
-        ReasonID,
-        ReasonName,
-        AgioType,
-        ItemName        -- ★ 新增欄位
-    )
-	SELECT
-        @EnterpriseID,
-        @ShopID,
-        @OrderID,
-        CONVERT(varchar,@now,112),
-        REPLACE(CONVERT(VARCHAR(8), @now, 108), ':', ''),
-        @now,
-        ID,
-        ItemID,
-        [Owner],
-        AgioReason,
-        AgioPercent,
-        AgioTotal,
-        AgioCost,
-        ReasonID,
-        ReasonName,
-        AgioType,
-        ItemName        -- ★ 新增欄位
-	FROM OPENJSON(@CouponsJson)      
-	WITH (
-        ID VARCHAR(100),
-        ItemID VARCHAR(100),
-        [Owner] VARCHAR(50),
-        AgioReason NVARCHAR(100),
-        AgioPercent FLOAT,
-        AgioTotal FLOAT,
-        AgioCost FLOAT,
-        ReasonID VARCHAR(40),
-        ReasonName NVARCHAR(100),
-        AgioType VARCHAR(50),
-        ItemName NVARCHAR(400)        -- ★ 新增欄位
-    );
-END
-
+			-- 優惠券處理，統一欄位順序，避免 SELECT *
+			IF @CouponsJson IS NOT NULL  
+			BEGIN  
+				INSERT INTO P_AgioTemp_Web (
+					EnterpriseID,
+					ShopID,
+					OrderID,
+					WorkDate,
+					WorkTime,
+					LastModify,
+					ID,
+					ItemID,
+					[Owner],
+					AgioReason,
+					AgioPercent,
+					AgioTotal,
+					AgioCost,
+					ReasonID,
+					ReasonName,
+					AgioType
+				)
+				SELECT
+					@EnterpriseID,
+					@ShopID,
+					@OrderID,
+					CONVERT(varchar, @now, 112),
+					REPLACE(CONVERT(VARCHAR(8), @now, 108), ':', ''),
+					@now,
+					ID,
+					ItemID,
+					[Owner],
+					AgioReason,
+					AgioPercent,
+					AgioTotal,
+					AgioCost,
+					ReasonID,
+					ReasonName,
+					AgioType
+				FROM OPENJSON(@CouponsJson)
+				WITH (
+					ID VARCHAR(100),
+					ItemID VARCHAR(100),
+					[Owner] VARCHAR(50),
+					AgioReason NVARCHAR(100),
+					AgioPercent FLOAT,
+					AgioTotal FLOAT,
+					AgioCost FLOAT,
+					ReasonID VARCHAR(40),
+					ReasonName NVARCHAR(100),
+					AgioType VARCHAR(50)
+				);
+			END
 
             -- [優化] 交易尾端：執行取號並更新訂單
             BEGIN TRY      
