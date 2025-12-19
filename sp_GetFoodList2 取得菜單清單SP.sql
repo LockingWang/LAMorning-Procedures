@@ -2,22 +2,22 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- ALTER   PROCEDURE [dbo].[sp_GetFoodList2]         
---     @enterpriseId NVARCHAR(50),    -- 企業ID         
---     @shopId NVARCHAR(50),          -- 店鋪ID          
---     @langId NVARCHAR(50) = 'TW',   -- 語系ID         
---     @foodId NVARCHAR(50) = NULL,   -- 食品ID     
---     @mouldCodes NVARCHAR(MAX),     -- 菜單代碼清單（逗號分隔）
---     @showHidenKind BIT = 0          -- 是否顯示隱藏分類（預設為false）
--- AS     
-
-DECLARE
-@enterpriseId NVARCHAR(50) = 'XF93277699',    -- 企業ID         
-    @shopId NVARCHAR(50) = 'A01',          -- 店鋪ID          
+ALTER   PROCEDURE [dbo].[sp_GetFoodList2]         
+    @enterpriseId NVARCHAR(50),    -- 企業ID         
+    @shopId NVARCHAR(50),          -- 店鋪ID          
     @langId NVARCHAR(50) = 'TW',   -- 語系ID         
     @foodId NVARCHAR(50) = NULL,   -- 食品ID     
-    @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_A01001',     -- 菜單代碼清單（逗號分隔）
+    @mouldCodes NVARCHAR(MAX),     -- 菜單代碼清單（逗號分隔）
     @showHidenKind BIT = 0          -- 是否顯示隱藏分類（預設為false）
+AS     
+
+-- DECLARE
+-- @enterpriseId NVARCHAR(50) = 'XF93277699',    -- 企業ID         
+--     @shopId NVARCHAR(50) = 'A01',          -- 店鋪ID          
+--     @langId NVARCHAR(50) = 'TW',   -- 語系ID         
+--     @foodId NVARCHAR(50) = NULL,   -- 食品ID     
+--     @mouldCodes NVARCHAR(MAX) = 'OnlineTogo_A01001',     -- 菜單代碼清單（逗號分隔）
+--     @showHidenKind BIT = 0          -- 是否顯示隱藏分類（預設為false）
 
 BEGIN         
     SET NOCOUNT ON;         
@@ -25,55 +25,9 @@ BEGIN
     BEGIN TRY         
         
         -- 將逗號分隔的 mouldCodes 轉換為表格    
-        DECLARE @MouldCodesTable TABLE (MouldCode NVARCHAR(50) COLLATE Chinese_PRC_CI_AS)    
+        DECLARE @MouldCodesTable TABLE (MouldCode NVARCHAR(50))    
         INSERT INTO @MouldCodesTable    
         SELECT value FROM STRING_SPLIT(@mouldCodes, ',')    
-
-        -- 預先彙總「套餐升級清單」，避免在主查詢中對每筆商品做相關子查詢
-        IF OBJECT_ID('tempdb..#UpgradeList') IS NOT NULL
-            DROP TABLE #UpgradeList;
-        CREATE TABLE #UpgradeList (
-            MouldCode NVARCHAR(50) COLLATE Chinese_PRC_CI_AS,
-            EntFood NVARCHAR(50) COLLATE Chinese_PRC_CI_AS,
-            UpgradeList NVARCHAR(MAX)
-        );
-
-        ;WITH ComboItems AS (
-            SELECT DISTINCT
-                PFEM.MouldCode,
-                PFEM.EntFood,
-                PFM.ID AS ComboFoodId,
-                COALESCE(JSON_VALUE(LANGPFM.Content, '$.' + @langId + '.Name'), PFM.Name) AS ComboFoodName,
-                PFM.price AS ComboPrice
-            FROM P_FoodEnt_Mould PFEM
-            JOIN P_FoodMould PFM
-                ON PFM.EnterpriseID = @enterpriseId
-                AND PFM.MouldCode COLLATE Chinese_PRC_CI_AS = PFEM.MouldCode COLLATE Chinese_PRC_CI_AS
-                AND PFM.YSFlag = 1          -- 只找套餐
-                AND PFM.ID = PFEM.MainFood
-                AND PFM.Hide = 0  
-            LEFT JOIN P_Data_Language_D LANGPFM
-                ON LANGPFM.EnterpriseID = @enterpriseId
-                AND LANGPFM.SourceID = PFM.ID
-                AND LANGPFM.TableName = 'Food'    
-            WHERE PFEM.EnterpriseID = @enterpriseId    
-                AND PFEM.MouldCode COLLATE Chinese_PRC_CI_AS IN (SELECT MouldCode FROM @MouldCodesTable)
-        )
-        INSERT INTO #UpgradeList (MouldCode, EntFood, UpgradeList)
-        SELECT
-            MouldCode,
-            EntFood,
-            '[' + STRING_AGG(
-                    CONCAT(
-                        '{"FoodId":"', CAST(ComboFoodId AS NVARCHAR(50)),
-                        '","FoodName":"', ISNULL(ComboFoodName, ''),
-                        '","Price":', CAST(ComboPrice AS NVARCHAR(20)),
-                        '}'
-                    ),
-                    ','
-                ) + ']'
-        FROM ComboItems
-        GROUP BY MouldCode, EntFood;
 
     -- [優化] 分流邏輯
     IF (@langId = 'TW' OR @langId IS NULL)
@@ -100,7 +54,29 @@ BEGIN
 
             -- 套餐升級清單（找出包含當前商品的套餐）    
             CASE     
-                WHEN FM.YSFlag = 0 THEN ISNULL(UL.UpgradeList, '[]')  -- 使用預先彙總結果，避免逐列子查詢
+                WHEN FM.YSFlag = 0 
+                     AND @foodId IS NOT NULL 
+                     AND (FM.NoGroup IS NULL OR FM.NoGroup = 1)  -- NoGroup 為升級套餐欄位(NULL 或 1 時才撈)
+                THEN CONCAT('[',     
+                        STUFF((    
+                            SELECT DISTINCT    
+                                ',{"FoodId":"' + CAST(PFM.ID AS NVARCHAR(50)) + '","FoodName":"' + PFM.Name + '","Price":' + CAST(PFM.price AS NVARCHAR(20)) + '}' -- [優化] 直接取 Name   
+                            FROM P_FoodEnt_Mould PFEM    
+                            JOIN P_FoodMould PFM ON PFM.EnterpriseID = @enterpriseId     
+                                AND PFM.MouldCode = PFEM.MouldCode   
+                                AND PFM.YSFlag = 1  -- 只找套餐    
+                                AND PFM.ID = PFEM.MainFood    
+                                AND PFM.Hide = 0  
+                            JOIN P_FoodKind_Mould FKM ON FKM.EnterpriseID = @enterpriseId   
+                                AND FKM.ID = PFM.Kind    
+                                AND FKM.MouldCode = PFEM.MouldCode 
+                            -- [優化] 移除 P_Data_Language_D Join
+                            WHERE PFEM.EnterpriseID = @enterpriseId    
+                                AND PFEM.MouldCode = FM.MouldCode    
+                                AND PFEM.EntFood = FM.ID  -- 找出包含當前商品的套餐    
+                            FOR XML PATH('')    
+                        ), 1, 1, ''),    
+                    ']')    
                 ELSE '[]'    
             END AS UpgradeList,         
             FM.Sn AS Sort,               -- 排序         
@@ -193,11 +169,10 @@ BEGIN
             -- LEFT JOIN P_Data_Language_D LANGFOOD ON LANGFOOD.EnterpriseID = @enterpriseid AND LANGFOOD.SourceID = FM.ID AND LANGFOOD.TableName = 'Food'     
             -- 商品停售 
             LEFT JOIN P_FoodMouldJoin PFMJ on FM.EnterpriseID = PFMJ.EnterpriseID and FM.MouldCode = PFMJ.MouldCode and FM.ID = PFMJ.FoodID and PFMJ.ShopID = @shopId 
-            LEFT JOIN #UpgradeList UL ON UL.MouldCode = FM.MouldCode COLLATE Chinese_PRC_CI_AS AND UL.EntFood = FM.ID COLLATE Chinese_PRC_CI_AS
         WHERE FM.EnterPriseID = @enterpriseId 
             AND (@foodId IS NULL OR FM.ID = @foodId)
             AND (FM.Hide IS NULL OR FM.Hide = 0) -- 非隱藏的餐點
-            AND FM.MouldCode COLLATE Chinese_PRC_CI_AS IN (SELECT MouldCode FROM @MouldCodesTable)
+            AND FM.MouldCode IN (SELECT MouldCode FROM @MouldCodesTable)
         ORDER BY FoodCategoryId, Sort
         OPTION(RECOMPILE);
     END
@@ -223,7 +198,31 @@ BEGIN
 
             -- 套餐升級清單（找出包含當前商品的套餐）    
             CASE     
-                WHEN FM.YSFlag = 0 THEN ISNULL(UL.UpgradeList, '[]')  -- 使用預先彙總結果，避免逐列子查詢
+                WHEN FM.YSFlag = 0 
+                     AND @foodId IS NOT NULL 
+                     AND (F.NoGroup IS NULL OR F.NoGroup = 1)  -- NoGroup NULL 或 1 時才撈升級套餐    
+                THEN CONCAT('[',     
+                        STUFF((    
+                            SELECT DISTINCT    
+                                ',{"FoodId":"' + CAST(PFM.ID AS NVARCHAR(50)) + '","FoodName":"' + ISNULL(JSON_VALUE(LANGPFM.Content, '$.' + @langId + '.Name'), PFM.Name) + '","Price":' + CAST(PFM.price AS NVARCHAR(20)) + '}'    
+                            FROM P_FoodEnt_Mould PFEM    
+                            JOIN P_FoodMould PFM ON PFM.EnterpriseID = @enterpriseId     
+                                AND PFM.MouldCode = PFEM.MouldCode   
+                                AND PFM.YSFlag = 1  -- 只找套餐    
+                                AND PFM.ID = PFEM.MainFood    
+                                AND PFM.Hide = 0  
+                            JOIN P_FoodKind_Mould FKM ON FKM.EnterpriseID = @enterpriseId   
+                                AND FKM.ID = PFM.Kind    
+                                AND FKM.MouldCode = PFEM.MouldCode 
+                            LEFT JOIN P_Data_Language_D LANGPFM ON LANGPFM.EnterpriseID = @enterpriseId   
+                                AND LANGPFM.SourceID = PFM.ID
+                                AND LANGPFM.TableName = 'Food'    
+                            WHERE PFEM.EnterpriseID = @enterpriseId    
+                                AND PFEM.MouldCode = FM.MouldCode    
+                                AND PFEM.EntFood = FM.ID  -- 找出包含當前商品的套餐    
+                            FOR XML PATH('')    
+                        ), 1, 1, ''),    
+                    ']')    
                 ELSE '[]'    
             END AS UpgradeList,         
             FM.Sn AS Sort,               -- 排序         
@@ -317,11 +316,10 @@ BEGIN
             LEFT JOIN P_Data_Language_D LANGFOOD ON LANGFOOD.EnterpriseID = @enterpriseid AND LANGFOOD.SourceID = FM.ID AND LANGFOOD.TableName = 'Food'     
             -- 商品停售 
             LEFT JOIN P_FoodMouldJoin PFMJ on FM.EnterpriseID = PFMJ.EnterpriseID and FM.MouldCode = PFMJ.MouldCode and FM.ID = PFMJ.FoodID and PFMJ.ShopID = @shopId 
-            LEFT JOIN #UpgradeList UL ON UL.MouldCode = FM.MouldCode COLLATE Chinese_PRC_CI_AS AND UL.EntFood = FM.ID COLLATE Chinese_PRC_CI_AS
         WHERE FM.EnterPriseID = @enterpriseId 
             AND (@foodId IS NULL OR FM.ID = @foodId)
             AND (FM.Hide IS NULL OR FM.Hide = 0) -- 非隱藏的餐點
-            AND FM.MouldCode COLLATE Chinese_PRC_CI_AS IN (SELECT MouldCode FROM @MouldCodesTable)
+            AND FM.MouldCode IN (SELECT MouldCode FROM @MouldCodesTable)
         ORDER BY FoodCategoryId, Sort
         OPTION(RECOMPILE);
     END
