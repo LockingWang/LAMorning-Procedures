@@ -186,6 +186,8 @@ BEGIN
             FM.ID AS FoodId,            -- 食品ID         
             ISNULL(JSON_VALUE(LANGFOOD.Content, '$.' + @langId + '.Name'), FM.Name) AS FoodName,          -- 食品名稱（多語系）          
             FM.Name AS OriginFoodName, -- 食品原始名稱
+            FM.PriceExpr AS MultiPriceType, -- 多價位標記("1"為頭、值為 FoodId 代表是多價位子項)
+            FM.CurPrice AS DefaultMultiPrice, -- 多價位子項是否為預設
             FM.stop AS [Stop], -- 販售狀態
             (                   
                 SELECT TOP 1 Dir          
